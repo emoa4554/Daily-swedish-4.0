@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f7f2">
+<title>Swedish 365</title>
+
+<style>
+:root{
+  --bg:#f5f7f2;
+  --card:#ffffff;
+  --ink:#23352d;
+  --muted:#758279;
+  --green:#51b78b;
+  --green-dark:#287b58;
+  --mint:#dff4e8;
+  --blue:#dcecff;
+  --coral:#ffe4d5;
+  --yellow:#fff1c8;
+  --border:#e7ece5;
+  --shadow:0 6px 24px rgba(37,60,46,.06);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid #78b9f4;outline-offset:3px}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(245,247,242,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.top-inner{
+  max-width:1100px;margin:auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.7px;font-size:21px}
+.brand-icon{
+  width:38px;height:38px;border-radius:13px;
+  background:var(--green);display:grid;place-items:center;color:white;font-size:20px;
+}
+.stats{display:flex;gap:9px;align-items:center}
+.stat{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;border:1px solid var(--border);
+  padding:8px 12px;border-radius:14px;font-weight:800;font-size:13px;
+}
+.stat span{font-size:17px}
+main{max-width:1100px;margin:auto;padding:24px 20px 100px}
+.hero{
+  background:linear-gradient(120deg,#e1f3e7,#edf5ed);
+  border-radius:25px;padding:24px 26px;margin-bottom:20px;
+  display:flex;justify-content:space-between;align-items:center;gap:20px;
+}
+.hero h1{font-size:clamp(23px,4vw,34px);letter-spacing:-1px;margin:0 0 7px}
+.hero p{margin:0;color:#62766a}
+.hero-emoji{font-size:52px}
+.track-switch{
+  display:flex;background:#e8ede7;padding:5px;border-radius:15px;gap:5px;
+  margin-bottom:18px;
+}
+.track-switch button{
+  flex:1;border:0;background:transparent;color:#66766c;
+  border-radius:11px;padding:12px 9px;font-weight:800;
+}
+.track-switch button.active{background:white;color:var(--green-dark);box-shadow:0 2px 6px #0000000c}
+.progress-panel{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:18px;margin-bottom:20px;box-shadow:var(--shadow);
+}
+.progress-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.progress-top strong{font-size:14px}
+.progress-top span{font-size:13px;color:var(--muted)}
+.progress-bar{height:10px;border-radius:20px;background:#edf1ed;overflow:hidden}
+.progress-fill{height:100%;background:var(--green);border-radius:20px;transition:width .3s}
+.level-nav{
+  display:flex;gap:8px;overflow-x:auto;padding:3px 0 15px;
+}
+.level-pill{
+  border:1px solid var(--border);background:white;color:var(--muted);
+  border-radius:99px;padding:9px 16px;white-space:nowrap;font-weight:800;font-size:12px;
+}
+.level-pill.active{background:#e2f4e9;color:#287b58;border-color:#c3e6d1}
+.path-title{font-size:22px;font-weight:900;margin:15px 0 5px}
+.path-subtitle{color:var(--muted);margin:0 0 20px;font-size:14px}
+.path-section{
+  background:white;border:1px solid var(--border);border-radius:24px;
+  padding:24px 18px;margin-bottom:22px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.level-banner{
+  border-radius:17px;padding:16px;margin-bottom:25px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.level-banner h2{margin:0;font-size:20px}
+.level-banner p{margin:5px 0 0;font-size:13px;opacity:.8}
+.level-banner .level-icon{font-size:30px}
+.level-a1{background:#e0f3e8}
+.level-a2{background:#e3edff}
+.level-b1{background:#fff0d4}
+.level-b2{background:#fce2dc}
+.lesson-path{
+  position:relative;max-width:620px;margin:auto;padding:5px 0 10px;
+}
+.path-line{
+  position:absolute;left:50%;top:0;bottom:0;width:5px;
+  transform:translateX(-50%);
+  background:repeating-linear-gradient(to bottom,#dbe7dc 0 12px,transparent 12px 22px);
+  border-radius:10px;z-index:0;
+}
+.lesson-row{
+  position:relative;display:flex;align-items:center;min-height:110px;
+  z-index:1;
+}
+.lesson-row.left{justify-content:flex-start;padding-left:9%}
+.lesson-row.right{justify-content:flex-end;padding-right:9%}
+.lesson-node{
+  width:76px;height:76px;border-radius:50%;
+  border:0;display:grid;place-items:center;
+  position:relative;transition:transform .15s,filter .15s;
+  box-shadow:0 5px 0 rgba(0,0,0,.09);
+}
+.lesson-node:hover{transform:translateY(-3px);filter:brightness(1.03)}
+.lesson-node.done{background:#54b88b;color:white}
+.lesson-node.current{background:#67b9ee;color:white;box-shadow:0 5px 0 #3190ca,0 0 0 7px #dcefff}
+.lesson-node.locked{background:#e8ece8;color:#a6b0a7;box-shadow:0 5px 0 #d6ddd6}
+.lesson-node.bonus{background:#ffcf65;color:#775313;box-shadow:0 5px 0 #e4ad43}
+.node-icon{font-size:25px}
+.node-day{position:absolute;bottom:-21px;font-size:10px;font-weight:900;color:#6b7b70;white-space:nowrap}
+.node-label{
+  width:120px;padding:0 10px;font-size:12px;font-weight:800;
+  color:#65756b;line-height:1.35;
+}
+.lesson-row.left .node-label{text-align:left}
+.lesson-row.right .node-label{text-align:right}
+.path-tip{
+  margin-top:18px;text-align:center;color:var(--muted);font-size:12px;
+}
+.secondary-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;
+}
+.mini-stat{
+  background:white;border:1px solid var(--border);border-radius:17px;padding:15px;
+}
+.mini-stat .num{font-size:24px;font-weight:900}
+.mini-stat .label{font-size:12px;color:var(--muted);margin-top:3px}
+.section-title{font-size:20px;font-weight:900;margin:22px 0 12px}
+.view{display:none}
+.view.active{display:block}
+.lesson-header{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px
+}
+.back-btn{
+  border:1px solid var(--border);background:white;border-radius:12px;
+  padding:10px 14px;font-weight:800;color:#52655a;
+}
+.lesson-progress{
+  height:8px;background:#e7ece7;border-radius:20px;overflow:hidden;margin-bottom:20px
+}
+.lesson-progress-fill{height:100%;background:var(--green);width:0;transition:width .3s}
+.lesson-title{font-size:28px;letter-spacing:-.7px;margin:0 0 5px}
+.lesson-meta{color:var(--muted);margin-bottom:20px}
+.lesson-tabs{
+  display:flex;gap:7px;overflow:auto;margin:15px 0;padding-bottom:5px
+}
+.lesson-tab{
+  border:1px solid var(--border);background:white;border-radius:12px;
+  padding:10px 13px;font-weight:800;color:#718077;white-space:nowrap;
+}
+.lesson-tab.active{background:#def3e6;color:#287b58;border-color:#c7e8d4}
+.lesson-content{background:white;border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+.word-card{
+  border:1px solid var(--border);border-radius:16px;padding:14px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;
+}
+.word-swedish{font-weight:900;font-size:19px}
+.word-english{color:var(--muted);font-size:14px;margin-top:3px}
+.word-actions{display:flex;gap:7px;align-items:center}
+.audio-btn{
+  border:0;background:#e6f4eb;color:#287b58;border-radius:12px;
+  width:42px;height:42px;font-size:17px;font-weight:800;
+}
+.native-link{
+  display:grid;place-items:center;text-decoration:none;
+  background:#eef2f8;color:#52729a;border-radius:12px;
+  width:42px;height:42px;font-size:12px;font-weight:900;
+}
+.block-title{font-size:18px;font-weight:900;margin:0 0 12px}
+.sentence-card{
+  background:#f7f9f6;border:1px solid var(--border);border-radius:16px;
+  padding:16px;margin-bottom:12px;
+}
+.sentence-sv{font-weight:800;font-size:18px;line-height:1.5}
+.sentence-en{color:var(--muted);font-size:14px;margin-top:5px}
+.sentence-controls{margin-top:10px}
+.dialogue-line{
+  padding:13px;border-radius:15px;margin-bottom:9px;
+}
+.dialogue-line:nth-child(odd){background:#e8f4eb}
+.dialogue-line:nth-child(even){background:#eef3fc}
+.speaker{font-size:11px;color:var(--muted);font-weight:900;margin-bottom:4px}
+.dialogue-text{font-size:16px;font-weight:800}
+.expression-card{
+  border:1px solid var(--border);border-radius:15px;padding:14px;margin-bottom:10px
+}
+.expression-card strong{font-size:17px}
+.expression-card p{color:var(--muted);margin:5px 0 0}
+.quiz-question{font-size:20px;font-weight:900;margin-bottom:15px}
+.quiz-options{display:grid;gap:10px}
+.quiz-option{
+  background:white;border:2px solid var(--border);border-radius:14px;
+  padding:14px;text-align:left;font-weight:800;color:var(--ink);
+}
+.quiz-option:hover{border-color:#9bd1b2}
+.quiz-option.correct{border-color:#51b78b;background:#e4f6eb}
+.quiz-option.wrong{border-color:#e78b80;background:#fff0ed}
+.quiz-feedback{font-weight:800;margin-top:14px;min-height:25px}
+.quiz-next{
+  background:var(--green);border:0;color:white;border-radius:14px;
+  padding:13px 18px;font-weight:900;margin-top:12px;width:100%;
+}
+.quiz-next:disabled{opacity:.4;cursor:not-allowed}
+textarea{
+  width:100%;min-height:125px;border:1px solid var(--border);
+  border-radius:15px;padding:14px;font:inherit;resize:vertical;
+}
+.write-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.action-btn{
+  border:0;background:#e3f3e9;color:#287b58;border-radius:13px;
+  padding:11px 15px;font-weight:900;
+}
+.action-btn.secondary{background:#edf1f8;color:#536d91}
+.status{color:var(--muted);font-size:13px;min-height:22px;margin-top:8px}
+.finish-card{text-align:center;padding:25px 10px}
+.finish-card .celebrate{font-size:64px}
+.finish-card h2{font-size:27px;margin:10px 0}
+.finish-card p{color:var(--muted)}
+.finish-card button{
+  border:0;background:var(--green);color:white;padding:14px 20px;
+  border-radius:15px;font-weight:900;margin-top:10px
+}
+.review-word{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;
+  background:#f7f9f6;border:1px solid var(--border);padding:13px;border-radius:14px;margin-bottom:9px;
+}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+.footer{text-align:center;color:#95a199;font-size:12px;padding:25px}
+@media(min-width:750px){
+  .lesson-content{padding:26px}
+  .path-section{padding:28px}
+}
+@media(max-width:500px){
+  main{padding:15px 13px 90px}
+  .top-inner{padding:11px 13px}
+  .brand{font-size:18px}
+  .stat{padding:7px 9px;font-size:12px}
+  .hero{padding:19px}
+  .hero-emoji{font-size:38px}
+  .path-section{padding:18px 10px}
+  .lesson-node{width:67px;height:67px}
+  .lesson-row{min-height:100px}
+  .lesson-row.left{padding-left:5%}
+  .lesson-row.right{padding-right:5%}
+  .node-label{width:110px;font-size:11px}
+  .lesson-title{font-size:25px}
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🇸🇪</div>
+      Swedish 365
+    </div>
+    <div class="stats">
+      <div class="stat"><span>🔥</span><b id="streak">0</b></div>
+      <div class="stat"><span>⭐</span><b id="xp">0</b> XP</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- PATH VIEW -->
+  <section id="pathView" class="view active">
+    <div class="hero">
+      <div>
+        <h1>Hej! Ready to learn?</h1>
+        <p>Small steps. Real Swedish. Every day.</p>
+      </div>
+      <div class="hero-emoji">🌿</div>
+    </div>
+
+    <div class="track-switch">
+      <button id="dailyTrack" class="active" onclick="switchTrack('daily')">🌱 Daily Life</button>
+      <button id="businessTrack" onclick="switchTrack('business')">💼 Business Professional</button>
+    </div>
+
+    <div class="progress-panel">
+      <div class="progress-top">
+        <strong id="trackProgressTitle">Daily Life progress</strong>
+        <span id="trackProgressText">0 / 365 days</span>
+      </div>
+      <div class="progress-bar"><div id="trackProgressFill" class="progress-fill"></div></div>
+    </div>
+
+    <div class="level-nav" id="levelNav"></div>
+    <div id="pathContainer"></div>
+
+    <div class="secondary-stats">
+      <div class="mini-stat">
+        <div class="num" id="newToday">0</div>
+        <div class="label">New words today</div>
+      </div>
+      <div class="mini-stat">
+        <div class="num" id="totalWords">0</div>
+        <div class="label">Unique words learned</div>
+      </div>
+      <div class="mini-stat">
+        <div class="num" id="reviewCount">0</div>
+        <div class="label">Words in review</div>
+      </div>
+    </div>
+
+    <button class="action-btn secondary" style="margin-top:15px;width:100%" onclick="showReview()">📚 Open vocabulary review</button>
+  </section>
+
+  <!-- LESSON VIEW -->
+  <section id="lessonView" class="view">
+    <div class="lesson-header">
+      <button class="back-btn" onclick="backToPath()">← Path</button>
+      <div style="font-weight:900;color:var(--muted)" id="lessonDayBadge">Day 1</div>
+    </div>
+
+    <div class="lesson-progress">
+      <div id="lessonProgressFill" class="lesson-progress-fill"></div>
+    </div>
+
+    <h1 class="lesson-title" id="lessonTitle"></h1>
+    <div class="lesson-meta" id="lessonMeta"></div>
+
+    <div class="lesson-tabs" id="lessonTabs">
+      <button class="lesson-tab active" data-tab="words">Words</button>
+      <button class="lesson-tab" data-tab="sentences">Sentences</button>
+      <button class="lesson-tab" data-tab="dialogue">Dialogue</button>
+      <button class="lesson-tab" data-tab="expressions">Expressions</button>
+      <button class="lesson-tab" data-tab="quiz">Quiz</button>
+      <button class="lesson-tab" data-tab="writing">Writing</button>
+    </div>
+
+    <div class="lesson-content" id="lessonContent"></div>
+    <div id="lessonStatus" class="status"></div>
+  </section>
+
+  <!-- REVIEW VIEW -->
+  <section id="reviewView" class="view">
+    <div class="lesson-header">
+      <button class="back-btn" onclick="backToPath()">← Path</button>
+      <strong>Vocabulary review</strong>
+    </div>
+    <h1 class="lesson-title">Your saved words 📚</h1>
+    <p class="lesson-meta">Words you've marked for another look.</p>
+    <div class="lesson-content" id="reviewContent"></div>
+  </section>
+</main>
+
+<div class="footer">Swedish 365 · Din svenska resa börjar här 🌿</div>
+
+<script>
+/* -------------------------------------------------------
+   Swedish 365 — standalone learning-site foundation
+   Progress saved locally in the current browser.
+------------------------------------------------------- */
+
+const STORAGE_KEY = "swedish365_path_v1";
+
+const levelInfo = [
+  {name:"A1",start:1,end:90,cls:"level-a1",icon:"🌱",desc:"Beginner"},
+  {name:"A2",start:91,end:180,cls:"level-a2",icon:"🌿",desc:"Elementary"},
+  {name:"B1",start:181,end:270,cls:"level-b1",icon:"🌳",desc:"Intermediate"},
+  {name:"B2",start:271,end:365,cls:"level-b2",icon:"🌲",desc:"Upper intermediate"}
+];
+
+const lessonTopics = {
+ daily:[
+  "Greetings & introductions","At the café","My family","At home","Numbers & time",
+  "Shopping","Food & cooking","Getting around","Daily routines","Weather",
+  "Making plans","At the restaurant","Hobbies","Work & weekdays","Travel",
+  "Health & wellbeing","Talking about the past","Feelings","Swedish culture","Everyday conversations"
+ ],
+ business:[
+  "Professional introductions","Meetings","Email & messaging","Presentations","Scheduling",
+  "Workplace vocabulary","Customer service","Negotiations","Project updates","Networking",
+  "Office routines","Business travel","Feedback","Team collaboration","Problem solving",
+  "Leadership","Finance basics","Recruitment","Strategy","Professional small talk","Decision making"
+ ]
+};
+
+const wordBank = {
+ A1:[
+  ["hej","hello"],["tack","thank you"],["ja","yes"],["nej","no"],
+  ["snälla","please"],["ursäkta","excuse me"],["hej då","goodbye"],
+  ["god morgon","good morning"],["bra","good"],["dålig","bad"],
+  ["vatten","water"],["kaffe","coffee"],["te","tea"],["bröd","bread"],
+  ["mjölk","milk"],["äpple","apple"],["hus","house"],["hem","home"],
+  ["katt","cat"],["hund","dog"],["vän","friend"],["familj","family"],
+  ["mamma","mother"],["pappa","father"],["barn","child"],["bok","book"],
+  ["bord","table"],["stol","chair"],["bil","car"],["buss","bus"],
+  ["tåg","train"],["gata","street"],["stad","city"],["butik","shop"],
+  ["mat","food"],["dag","day"],["natt","night"],["idag","today"],
+  ["imorgon","tomorrow"],["igår","yesterday"]
+ ],
+ A2:[
+  ["behöver","need"],["kanske","maybe"],["alltid","always"],["ibland","sometimes"],
+  ["redan","already"],["fortfarande","still"],["ofta","often"],["sällan","rarely"],
+  ["börja","begin"],["sluta","finish/stop"],["försöka","try"],["välja","choose"],
+  ["glömma","forget"],["komma ihåg","remember"],["förklara","explain"],
+  ["bestämma","decide"],["fråga","ask"],["svara","answer"],["hitta","find"],
+  ["lämna","leave"],["hämta","pick up"],["betala","pay"],["köpa","buy"],
+  ["öppna","open"],["stänga","close"],["vänta","wait"],["tycka","think/opinion"],
+  ["tänka","think"],["känna","feel"],["verka","seem"],["säkert","certainly"],
+  ["möjlig","possible"],["viktig","important"],["ledig","free/off work"],
+  ["trevlig","pleasant"],["nära","near"],["långt","far"],["billig","cheap"],
+  ["dyr","expensive"],["vanlig","usual"]
+ ],
+ B1:[
+  ["utveckla","develop"],["förbättra","improve"],["uppleva","experience"],
+  ["påverka","influence"],["hantera","manage"],["diskutera","discuss"],
+  ["föreslå","suggest"],["beskriva","describe"],["jämföra","compare"],
+  ["innebära","mean/entail"],["möjlighet","opportunity"],["utmaning","challenge"],
+  ["lösning","solution"],["samhälle","society"],["miljö","environment"],
+  ["relation","relationship"],["utbildning","education"],["erfarenhet","experience"],
+  ["kunskap","knowledge"],["åsikt","opinion"],["beslut","decision"],
+  ["fördel","advantage"],["nackdel","disadvantage"],["orsak","cause"],
+  ["resultat","result"],["framtid","future"],["förändring","change"],
+  ["utifrån","based on/from"],["däremot","however"],["dessutom","in addition"],
+  ["åtminstone","at least"],["troligtvis","probably"],["egentligen","actually"],
+  ["samtidigt","at the same time"],["även om","even if"],["eftersom","because"],
+  ["därför","therefore"],["medan","while"],["huruvida","whether"],
+  ["sammanhang","context"]
+ ],
+ B2:[
+  ["förutsättning","prerequisite"],["genomföra","implement/carry out"],
+  ["åstadkomma","accomplish"],["bedöma","assess"],["redogöra","account for"],
+  ["resonera","reason/discuss"],["prioritera","prioritize"],["uppmärksamma","notice"],
+  ["omfattande","extensive"],["avgörande","crucial"],["hållbar","sustainable"],
+  ["relevant","relevant"],["konsekvens","consequence"],["perspektiv","perspective"],
+  ["tillvägagångssätt","approach"],["överenskommelse","agreement"],
+  ["förhållande","relationship/condition"],["åtgärd","measure/action"],
+  ["tillämpa","apply"],["framgång","success"],["misslyckande","failure"],
+  ["resurs","resource"],["effektivitet","efficiency"],["kvalitet","quality"],
+  ["långsiktig","long-term"],["kortfattad","concise"],["omständighet","circumstance"],
+  ["förbehåll","reservation/condition"],["alternativ","alternative"],
+  ["slutsats","conclusion"],["överväga","consider"],["motivera","justify"],
+  ["förtydliga","clarify"],["samordna","coordinate"],["bemöta","respond to"],
+  ["återspegla","reflect"],["framhäva","emphasize"],["uppnå","achieve"],
+  ["vidareutveckla","further develop"],["förebygga","prevent"]
+ ]
+};
+
+const sentenceBank = {
+ A1:[
+  ["Jag heter Anna.","My name is Anna."],
+  ["Jag bor i Sverige.","I live in Sweden."],
+  ["Hur mår du idag?","How are you today?"],
+  ["Jag mår bra, tack.","I'm well, thank you."],
+  ["Kan jag få en kopp kaffe?","Can I have a cup of coffee?"],
+  ["Var ligger stationen?","Where is the station?"],
+  ["Jag skulle vilja ha lite vatten.","I would like some water."],
+  ["Vad kostar det?","How much does it cost?"],
+  ["Jag tycker om att läsa.","I like reading."],
+  ["Vi ses imorgon.","See you tomorrow."]
+ ],
+ A2:[
+  ["Jag brukar gå en promenad efter jobbet.","I usually go for a walk after work."],
+  ["Kan du hjälpa mig att hitta rätt?","Can you help me find the right way?"],
+  ["Jag har inte hunnit äta ännu.","I haven't had time to eat yet."],
+  ["Vi kanske kan träffas på fredag.","Maybe we can meet on Friday."],
+  ["Jag behöver köpa några saker i affären.","I need to buy a few things at the store."],
+  ["Det var mycket bättre än jag trodde.","It was much better than I thought."],
+  ["Hur lång tid tar det att åka dit?","How long does it take to get there?"],
+  ["Jag håller med dig.","I agree with you."],
+  ["Jag är inte säker på vad du menar.","I'm not sure what you mean."],
+  ["Kan vi boka om mötet?","Can we reschedule the meeting?"]
+ ],
+ B1:[
+  ["Jag har funderat på det ganska länge.","I've been thinking about it for quite a while."],
+  ["Det beror på vilka möjligheter vi har.","It depends on what opportunities we have."],
+  ["Å ena sidan är det praktiskt, å andra sidan är det dyrt.","On one hand it's practical, on the other it's expensive."],
+  ["Vi behöver hitta en lösning som fungerar för alla.","We need to find a solution that works for everyone."],
+  ["Det är viktigt att ta hänsyn till situationen.","It's important to take the situation into account."],
+  ["Jag skulle gärna vilja höra din åsikt.","I'd like to hear your opinion."],
+  ["Trots problemen lyckades vi genomföra planen.","Despite the problems, we managed to carry out the plan."],
+  ["Det har förändrats en hel del sedan dess.","A lot has changed since then."],
+  ["Vi kan diskutera det när vi har mer information.","We can discuss it when we have more information."],
+  ["Det är inte alltid så enkelt som det verkar.","It's not always as simple as it seems."]
+ ],
+ B2:[
+  ["Vi bör överväga konsekvenserna innan vi fattar ett beslut.","We should consider the consequences before making a decision."],
+  ["Det finns flera faktorer som behöver vägas in.","There are several factors that need to be considered."],
+  ["Utifrån det vi vet verkar detta vara det mest hållbara alternativet.","Based on what we know, this seems the most sustainable option."],
+  ["Jag vill gärna förtydliga vad jag menar med det förslaget.","I'd like to clarify what I mean by that proposal."],
+  ["Det avgörande är hur vi väljer att hantera situationen.","The crucial thing is how we choose to handle the situation."],
+  ["Förutsättningarna har förändrats sedan vår senaste diskussion.","The conditions have changed since our last discussion."],
+  ["Det kräver ett mer långsiktigt perspektiv.","It requires a more long-term perspective."],
+  ["Vi behöver samordna insatserna för att nå målet.","We need to coordinate our efforts to reach the goal."],
+  ["Det är rimligt att anta, men vi bör ändå undersöka saken.","It's reasonable to assume, but we should still investigate."],
+  ["Sammantaget talar mycket för den här lösningen.","Overall, a lot speaks in favor of this solution."]
+ ]
+};
+
+const dialogueBank = {
+ daily:[
+  [["Person A","Hej! Hur är läget?","Hi! How are things?"],
+   ["Person B","Jo tack, det är bra. Själv då?","I'm good, thanks. How about you?"],
+   ["Person A","Det är fint. Vad ska du göra i helgen?","I'm good. What are you doing this weekend?"],
+   ["Person B","Jag tänkte träffa några vänner.","I was thinking of meeting some friends."],
+   ["Person A","Vad trevligt! Vi hörs senare.","How nice! Talk later."]],
+  [["Person A","Ursäkta, har ni den här i en annan storlek?","Excuse me, do you have this in another size?"],
+   ["Person B","Jag ska kolla på lagret.","I'll check the stockroom."],
+   ["Person A","Tack så mycket.","Thank you very much."],
+   ["Person B","Varsågod!","You're welcome!"]]
+ ],
+ business:[
+  [["Person A","God morgon. Har vi alla kommit?","Good morning. Is everyone here?"],
+   ["Person B","Ja, jag tror att vi kan börja.","Yes, I think we can begin."],
+   ["Person A","Bra. Vi går igenom dagens agenda.","Great. Let's go through today's agenda."],
+   ["Person B","Jag har lagt till en punkt om tidsplanen.","I've added an item about the timeline."],
+   ["Person A","Perfekt. Då tar vi den först.","Perfect. Let's take that first."]],
+  [["Person A","Har du möjlighet att ses på torsdag?","Are you available to meet on Thursday?"],
+   ["Person B","Det fungerar bra för mig på eftermiddagen.","That works well for me in the afternoon."],
+   ["Person A","Ska vi säga klockan två?","Shall we say two o'clock?"],
+   ["Person B","Absolut. Skicka gärna en inbjudan.","Absolutely. Please send an invitation."],
+   ["Person A","Det gör jag. Tack!","I'll do that. Thanks!"]]
+ ]
+};
+
+const expressionBank={
+ daily:[
+  ["Vad roligt!","How fun!"],
+  ["Ingen fara.","No worries."],
+  ["Det spelar ingen roll.","It doesn't matter."],
+  ["Vi får se.","We'll see."],
+  ["Precis!","Exactly!"],
+  ["Jag förstår.","I understand."],
+  ["Vad synd!","That's too bad!"],
+  ["Det låter bra.","That sounds good."]
+ ],
+ business:[
+  ["Det låter rimligt.","That sounds reasonable."],
+  ["Jag återkommer till dig.","I'll get back to you."],
+  ["Vi tar det vidare.","We'll take it further."],
+  ["Tack för återkopplingen.","Thanks for the feedback."],
+  ["Låt oss stämma av.","Let's check in."],
+  ["Det är en bra utgångspunkt.","That's a good starting point."],
+  ["Vi är överens.","We agree."],
+  ["Jag ser fram emot det.","I look forward to it."]
+ ]
+};
+
+let state=loadState();
+let activeTrack="daily";
+let selectedDay=1;
+let activeTab="words";
+let quizIndex=0;
+let quizCorrect=0;
+let quizAnswered=false;
+let listenSequenceActive=false;
+let currentLevelFilter="all";
+
+function loadState(){
+ try{
+  return JSON.parse(localStorage.getItem(STORAGE_KEY))||{
+   xp:0,streak:0,lastVisit:null,completed:{daily:[],business:[]},
+   learned:{},review:[],todayNew:{date:"",count:0}
+  };
+ }catch(e){
+  return {xp:0,streak:0,lastVisit:null,completed:{daily:[],business:[]},learned:{},review:[],todayNew:{date:"",count:0}};
+ }
+}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function getLevel(day){return levelInfo.find(l=>day>=l.start&&day<=l.end)||levelInfo[3]}
+function levelKey(day){return getLevel(day).name}
+function getCompleted(){return state.completed[activeTrack]||[]}
+function trackName(){return activeTrack==="daily"?"Daily Life":"Business Professional"}
+function trackTopics(){return lessonTopics[activeTrack]}
+
+function updateStats(){
+ document.getElementById("xp").textContent=state.xp||0;
+ document.getElementById("streak").textContent=state.streak||0;
+ document.getElementById("totalWords").textContent=Object.keys(state.learned).length;
+ document.getElementById("reviewCount").textContent=state.review.length;
+ const today=todayKey();
+ document.getElementById("newToday").textContent=state.todayNew.date===today?state.todayNew.count:0;
+ const completed=getCompleted().length;
+ document.getElementById("trackProgressTitle").textContent=trackName()+" progress";
+ document.getElementById("trackProgressText").textContent=completed+" / 365 days";
+ document.getElementById("trackProgressFill").style.width=(completed/365*100)+"%";
+}
+
+function switchTrack(track){
+ activeTrack=track;
+ document.getElementById("dailyTrack").classList.toggle("active",track==="daily");
+ document.getElementById("businessTrack").classList.toggle("active",track==="business");
+ currentLevelFilter="all";
+ renderPath();
+ updateStats();
+}
+
+function renderLevelNav(){
+ const nav=document.getElementById("levelNav");
+ nav.innerHTML=`<button class="level-pill ${currentLevelFilter==="all"?"active":""}" onclick="filterLevel('all')">All levels</button>`+
+ levelInfo.map(l=>`<button class="level-pill ${currentLevelFilter===l.name?"active":""}" onclick="filterLevel('${l.name}')">${l.name} · ${l.desc}</button>`).join("");
+}
+function filterLevel(level){currentLevelFilter=level;renderPath()}
+
+function getLessonTitle(day){
+ const level=getLevel(day);
+ const topics=trackTopics();
+ const topic=topics[(day-1)%topics.length];
+ const titles={
+  A1:activeTrack==="daily"?"Everyday Swedish":"Swedish at work",
+  A2:activeTrack==="daily"?"Build your conversations":"Professional communication",
+  B1:activeTrack==="daily"?"Express yourself":"Communicate with confidence",
+  B2:activeTrack==="daily"?"Nuance & fluency":"Advanced workplace Swedish"
+ };
+ return topic;
+}
+
+function isUnlocked(day){
+ if(day===1)return true;
+ return getCompleted().includes(day-1);
+}
+
+function renderPath(){
+ renderLevelNav();
+ const container=document.getElementById("pathContainer");
+ let html="";
+ levelInfo.forEach(level=>{
+  if(currentLevelFilter!=="all"&&currentLevelFilter!==level.name)return;
+  html+=`<section class="path-section">
+    <div class="level-banner ${level.cls}">
+      <div><h2>${level.name} · ${level.desc}</h2><p>Days ${level.start}–${level.end}</p></div>
+      <div class="level-icon">${level.icon}</div>
+    </div>
+    <div class="lesson-path"><div class="path-line"></div>`;
+  for(let day=level.start;day<=level.end;day++){
+   const completed=getCompleted().includes(day);
+   const unlocked=isUnlocked(day);
+   const isCurrent=!completed&&unlocked;
+   const side=day%2===0?"right":"left";
+   let cls=completed?"done":unlocked?"current":"locked";
+   let icon=completed?"✓":unlocked?(day%5===0?"🎧":"▶"):"🔒";
+   let label=getLessonTitle(day);
+   html+=`<div class="lesson-row ${side}">
+      <button class="lesson-node ${cls}" ${unlocked?'onclick="openLesson('+day+')"':'disabled'} aria-label="Day ${day} ${label}">
+       <span class="node-icon">${icon}</span><span class="node-day">DAY ${day}</span>
+      </button>
+      <div class="node-label">${label}</div>
+    </div>`;
+  }
+  html+=`</div><div class="path-tip">Complete a lesson to unlock the next step ✨</div></section>`;
+ });
+ container.innerHTML=html;
+ updateStats();
+}
+
+function openLesson(day){
+ if(!isUnlocked(day))return;
+ selectedDay=day;activeTab="words";quizIndex=0;quizCorrect=0;quizAnswered=false;
+ markWordsEncountered();
+ showView("lessonView");
+ renderLesson();
+}
+function markWordsEncountered(){
+ const today=todayKey();
+ if(state.todayNew.date!==today)state.todayNew={date:today,count:0};
+ getWordsForLesson().forEach(([sv,en])=>{
+  const id=sv.toLowerCase();
+  if(!state.learned[id]){
+   state.learned[id]={english:en,firstDay:selectedDay,track:activeTrack};
+   state.todayNew.count++;
+  }
+ });
+ saveState();updateStats();
+}
+
+function getWordsForLesson(){
+ const lvl=levelKey(selectedDay);
+ const bank=wordBank[lvl];
+ const offset=(selectedDay*7)%Math.max(1,bank.length-10);
+ return bank.slice(offset,offset+10);
+}
+function getSentences(){
+ return sentenceBank[levelKey(selectedDay)];
+}
+function getDialogue(){
+ const bank=dialogueBank[activeTrack];
+ return bank[(selectedDay-1)%bank.length];
+}
+function getExpressions(){
+ return expressionBank[activeTrack];
+}
+
+function renderLesson(){
+ const level=getLevel(selectedDay);
+ document.getElementById("lessonDayBadge").textContent="Day "+selectedDay+" · "+level.name;
+ document.getElementById("lessonTitle").textContent=getLessonTitle(selectedDay);
+ document.getElementById("lessonMeta").textContent=trackName()+" · "+level.name;
+ document.getElementById("lessonProgressFill").style.width=(getCompleted().length/365*100)+"%";
+ document.querySelectorAll(".lesson-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===activeTab));
+ renderTab();
+}
+
+function renderTab(){
+ const content=document.getElementById("lessonContent");
+ document.getElementById("lessonStatus").textContent="";
+ if(activeTab==="words")renderWords(content);
+ if(activeTab==="sentences")renderSentences(content);
+ if(activeTab==="dialogue")renderDialogue(content);
+ if(activeTab==="expressions")renderExpressions(content);
+ if(activeTab==="quiz")renderQuiz(content);
+ if(activeTab==="writing")renderWriting(content);
+}
+
+function nativeLink(word){
+ const url="https://forvo.com/search/"+encodeURIComponent(word)+"/";
+ return `<a class="native-link" target="_blank" rel="noopener" href="${url}" title="Find native-speaker recordings on Forvo">N</a>`;
+}
+function renderWords(content){
+ const words=getWordsForLesson();
+ content.innerHTML=`<h3 class="block-title">Today's vocabulary</h3>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:15px">🔊 Device voice · N Native recording search</div>
+ ${words.map(([sv,en])=>`<div class="word-card">
+  <div><div class="word-swedish">${sv}</div><div class="word-english">${en}</div></div>
+  <div class="word-actions">
+   <button class="audio-btn" data-say="${escapeAttr(sv)}" aria-label="Synthetic voice pronunciation">🔊</button>
+   ${nativeLink(sv)}
+   <button class="audio-btn" onclick="toggleReview('${escapeAttr(sv)}')" title="Add to review">☆</button>
+  </div>
+ </div>`).join("")}
+ <button class="action-btn secondary" onclick="listenAllWords()">▶ Listen to all</button>
+ <button class="action-btn secondary" onclick="stopAudio()">■ Stop</button>
+ <div class="status" id="audioStatus"></div>`;
+}
+function renderSentences(content){
+ content.innerHTML=`<h3 class="block-title">Useful sentences</h3>
+ ${getSentences().map(([sv,en])=>`<div class="sentence-card">
+  <div class="sentence-sv">${sv}</div><div class="sentence-en">${en}</div>
+  <div class="sentence-controls"><button class="audio-btn" data-say="${escapeAttr(sv)}">🔊</button> ${nativeLink(sv)}</div>
+ </div>`).join("")}
+ <button class="action-btn secondary" onclick="listenAllSentences()">▶ Listen to all</button>
+ <button class="action-btn secondary" onclick="stopAudio()">■ Stop</button>
+ <div class="status" id="audioStatus"></div>`;
+}
+function renderDialogue(content){
+ content.innerHTML=`<h3 class="block-title">Conversation</h3>
+ ${getDialogue().map(([speaker,sv,en])=>`<div class="dialogue-line">
+  <div class="speaker">${speaker}</div>
+  <div class="dialogue-text">${sv}</div>
+  <div class="sentence-en">${en}</div>
+  <div style="margin-top:8px"><button class="audio-btn" data-say="${escapeAttr(sv)}">🔊</button> ${nativeLink(sv)}</div>
+ </div>`).join("")}
+ <button class="action-btn secondary" onclick="listenDialogue()">▶ Listen to dialogue</button>
+ <button class="action-btn secondary" onclick="stopAudio()">■ Stop</button>
+ <div class="status" id="audioStatus"></div>`;
+}
+function renderExpressions(content){
+ content.innerHTML=`<h3 class="block-title">Natural expressions</h3>
+ ${getExpressions().map(([sv,en])=>`<div class="expression-card">
+  <strong>${sv}</strong><p>${en}</p>
+  <div style="margin-top:9px"><button class="audio-btn" data-say="${escapeAttr(sv)}">🔊</button> ${nativeLink(sv)}</div>
+ </div>`).join("")}`;
+}
+function renderWriting(content){
+ content.innerHTML=`<h3 class="block-title">Your turn ✍️</h3>
+ <p style="color:var(--muted)">Write a few sentences in Swedish. Listen to your own text or check a native recording for individual words.</p>
+ <textarea id="writingText" placeholder="Skriv på svenska här..."></textarea>
+ <div class="write-actions">
+  <button class="action-btn" onclick="speakWriting()">🔊 Listen (device voice)</button>
+  <button class="action-btn secondary" onclick="saveWriting()">Save text</button>
+ </div>
+ <div class="status" id="writingStatus"></div>`;
+}
+
+/* Quiz */
+function renderQuiz(content){
+ const words=getWordsForLesson();
+ const questionWord=words[quizIndex%words.length];
+ if(quizIndex>=5){
+  content.innerHTML=`<div class="finish-card">
+   <div class="celebrate">🎉</div><h2>Quiz complete!</h2>
+   <p>You got ${quizCorrect} out of 5 correct.</p>
+   <button onclick="finishLesson()">Complete day ${selectedDay} →</button>
+  </div>`;
+  return;
+ }
+ const choices=makeChoices(questionWord[1],words.map(w=>w[1]));
+ quizAnswered=false;
+ content.innerHTML=`<h3 class="block-title">Quick quiz · ${quizIndex+1}/5</h3>
+ <div class="quiz-question">What does <span style="color:var(--green-dark)">${questionWord[0]}</span> mean?</div>
+ <div class="quiz-options">${choices.map(c=>`<button class="quiz-option" data-answer="${escapeAttr(c)}">${c}</button>`).join("")}</div>
+ <div class="quiz-feedback" id="quizFeedback"></div>
+ <button class="quiz-next" id="quizNext" disabled onclick="nextQuiz()">Continue</button>`;
+}
+function makeChoices(correct,all){
+ const list=[correct];
+ while(list.length<4){
+  const c=all[Math.floor(Math.random()*all.length)];
+  if(c!==correct&&!list.includes(c))list.push(c);
+  if(list.length===all.length)break;
+ }
+ return list.sort(()=>Math.random()-.5);
+}
+function nextQuiz(){
+ quizIndex++;
+ renderQuiz(document.getElementById("lessonContent"));
+}
+function answerQuiz(btn){
+ if(quizAnswered)return;
+ quizAnswered=true;
+ const correct=getWordsForLesson()[quizIndex%10][1];
+ const isCorrect=btn.dataset.answer===correct;
+ if(isCorrect)quizCorrect++;
+ document.querySelectorAll(".quiz-option").forEach(b=>{
+  b.disabled=true;
+  if(b.dataset.answer===correct)b.classList.add("correct");
+ });
+ if(!isCorrect)btn.classList.add("wrong");
+ document.getElementById("quizFeedback").textContent=isCorrect?"Correct! Bra jobbat!":"Correct answer: "+correct;
+ document.getElementById("quizNext").disabled=false;
+}
+
+/* Audio: synthetic voice is device-dependent; native search is external */
+function getSwedishVoice(){
+ const voices=speechSynthesis.getVoices();
+ return voices.find(v=>v.lang.toLowerCase()==="sv-se")||
+        voices.find(v=>v.lang.toLowerCase().startsWith("sv"))||null;
+}
+function speak(text){
+ if(!("speechSynthesis" in window)){
+  setStatus("Speech synthesis is not available in this browser.");
+  return;
+ }
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="sv-SE";
+ const v=getSwedishVoice();
+ if(v)u.voice=v;
+ u.rate=.88;
+ u.onstart=()=>setStatus("Playing device-generated Swedish voice…");
+ u.onend=()=>setStatus("Playback finished.");
+ u.onerror=()=>setStatus("Voice playback failed. Try the native recording link.");
+ speechSynthesis.speak(u);
+}
+function setStatus(text){
+ const el=document.getElementById("lessonStatus");
+ if(el)el.textContent=text;
+ const audio=document.getElementById("audioStatus");
+ if(audio)audio.textContent=text;
+}
+function stopAudio(){
+ listenSequenceActive=false;
+ if("speechSynthesis" in window)speechSynthesis.cancel();
+ setStatus("Audio stopped.");
+}
+function listenSequence(items){
+ stopAudio();
+ listenSequenceActive=true;
+ let i=0;
+ function next(){
+  if(!listenSequenceActive||i>=items.length){listenSequenceActive=false;setStatus("Sequence finished.");return}
+  const text=items[i++];
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="sv-SE";u.rate=.88;
+  const v=getSwedishVoice();if(v)u.voice=v;
+  u.onend=()=>{if(listenSequenceActive)setTimeout(next,2000)};
+  u.onerror=()=>{listenSequenceActive=false;setStatus("Playback error. Try individual audio buttons.")};
+  u.onstart=()=>setStatus("Playing "+i+" / "+items.length);
+  speechSynthesis.speak(u);
+ }
+ next();
+}
+function listenAllWords(){listenSequence(getWordsForLesson().map(w=>w[0]))}
+function listenAllSentences(){listenSequence(getSentences().map(s=>s[0]))}
+function listenDialogue(){listenSequence(getDialogue().map(l=>l[1]))}
+
+function speakWriting(){
+ const text=document.getElementById("writingText").value.trim();
+ if(!text){document.getElementById("writingStatus").textContent="Write something first.";return}
+ speak(text);
+ document.getElementById("writingStatus").textContent="Playing your text with device speech synthesis.";
+}
+function saveWriting(){
+ const text=document.getElementById("writingText").value.trim();
+ if(!text){document.getElementById("writingStatus").textContent="Write something first.";return}
+ const key="swedish365_writing_"+activeTrack+"_"+selectedDay;
+ localStorage.setItem(key,text);
+ document.getElementById("writingStatus").textContent="Text saved in this browser.";
+}
+
+/* Review vocabulary */
+function toggleReview(word){
+ const i=state.review.indexOf(word);
+ if(i>=0)state.review.splice(i,1);else state.review.push(word);
+ saveState();updateStats();
+ setStatus(i>=0?"Removed from review.":"Added to review.");
+}
+function showReview(){
+ showView("reviewView");
+ const el=document.getElementById("reviewContent");
+ if(!state.review.length){
+  el.innerHTML='<div class="empty">No saved words yet. Tap ☆ next to a word to add it here.</div>';
+  return;
+ }
+ el.innerHTML=state.review.map(w=>`<div class="review-word">
+  <div><strong>${w}</strong><div class="sentence-en">${state.learned[w.toLowerCase()]?.english||""}</div></div>
+  <div class="word-actions"><button class="audio-btn" data-say="${escapeAttr(w)}">🔊</button>${nativeLink(w)}
+  <button class="action-btn secondary" onclick="toggleReview('${escapeAttr(w)}');showReview()">✓</button></div>
+ </div>`).join("");
+}
+
+/* Finish and unlock */
+function finishLesson(){
+ const completed=state.completed[activeTrack];
+ if(!completed.includes(selectedDay)){
+  completed.push(selectedDay);
+  state.xp+=20;
+  updateStreak();
+ }
+ saveState();
+ updateStats();
+ showView("pathView");
+ renderPath();
+}
+function updateStreak(){
+ const today=todayKey();
+ if(state.lastVisit===today)return;
+ const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+ const ykey=yesterday.toISOString().slice(0,10);
+ state.streak=state.lastVisit===ykey?(state.streak||0)+1:1;
+ state.lastVisit=today;
+}
+
+/* View helpers */
+function showView(id){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function backToPath(){stopAudio();showView("pathView");renderPath()}
+
+/* Escape text used in data attributes */
+function escapeAttr(str){
+ return String(str).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* Delegated events */
+document.getElementById("lessonTabs").addEventListener("click",e=>{
+ const btn=e.target.closest(".lesson-tab");
+ if(!btn)return;
+ activeTab=btn.dataset.tab;
+ renderLesson();
+});
+document.getElementById("lessonContent").addEventListener("click",e=>{
+ const audioBtn=e.target.closest("[data-say]");
+ if(audioBtn){speak(audioBtn.dataset.say);return}
+ const quizBtn=e.target.closest(".quiz-option");
+ if(quizBtn){answerQuiz(quizBtn);return}
+});
+document.getElementById("lessonContent").addEventListener("click",e=>{
+ if(e.target.closest("#quizNext"))return;
+});
+document.getElementById("reviewContent").addEventListener("click",e=>{
+ const b=e.target.closest("[data-say]");
+ if(b)speak(b.dataset.say);
+});
+
+/* Initialization */
+if("speechSynthesis" in window){
+ speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+}
+renderPath();
+updateStats();
+</script>
+</body>
+</html>
