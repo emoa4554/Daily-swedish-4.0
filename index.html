@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f7f2">
+<title>Swedish 365</title>
+
+<style>
+:root{
+  --bg:#f5f7f2;
+  --card:#ffffff;
+  --ink:#23352e;
+  --muted:#75847b;
+  --green:#347b59;
+  --green-dark:#24563e;
+  --mint:#e1f1e7;
+  --blue:#e8f1f8;
+  --yellow:#fff4d8;
+  --pink:#f9e8e4;
+  --line:#e4eae3;
+  --shadow:0 5px 24px rgba(34,58,43,.055);
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #8fc5a3;outline-offset:3px}
+.topbar{
+  position:sticky;top:0;z-index:10;
+  background:rgba(245,247,242,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.top-inner{
+  max-width:1100px;margin:auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.logo{display:flex;align-items:center;gap:10px;font-weight:850;font-size:20px;letter-spacing:-.7px}
+.logo-icon{
+  width:38px;height:38px;border-radius:13px;
+  background:var(--green);color:white;display:grid;place-items:center;
+  font-size:21px;
+}
+.top-stats{display:flex;gap:12px;align-items:center}
+.stat{
+  background:white;border:1px solid var(--line);border-radius:14px;
+  padding:8px 12px;font-size:13px;font-weight:750;
+}
+.stat span{margin-right:5px}
+.container{max-width:1100px;margin:auto;padding:26px 20px 70px}
+.hero{
+  border-radius:28px;padding:30px;
+  background:linear-gradient(120deg,#e1f0e5,#f0f5e9 65%,#e6f0f5);
+  display:flex;justify-content:space-between;align-items:center;gap:24px;
+  margin-bottom:22px;
+}
+.hero h1{font-size:clamp(28px,5vw,43px);letter-spacing:-1.6px;margin:0 0 10px}
+.hero p{margin:0;color:#52675a;max-width:540px;line-height:1.6}
+.hero-art{font-size:70px;flex-shrink:0}
+.eyebrow{
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--green);font-weight:850;margin-bottom:9px;
+}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;margin:20px 0;
+}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  border:1px solid var(--line);background:white;color:var(--ink);
+  border-radius:30px;padding:9px 16px;font-weight:750;font-size:13px;
+}
+.pill.active{background:var(--green);color:white;border-color:var(--green)}
+.section-title{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;margin:24px 0 14px;
+}
+.section-title h2{margin:0;font-size:20px;letter-spacing:-.4px}
+.section-title small{color:var(--muted)}
+.progress-wrap{
+  background:white;border:1px solid var(--line);border-radius:18px;padding:17px 19px;
+  margin-bottom:22px;
+}
+.progress-row{display:flex;justify-content:space-between;gap:10px;margin-bottom:11px;font-size:13px;font-weight:750}
+.progress-track{height:9px;background:#edf1ed;border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;background:var(--green);border-radius:20px;transition:width .3s}
+.path{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:13px;
+}
+.day{
+  min-height:115px;border:1px solid var(--line);background:white;
+  border-radius:19px;padding:13px 10px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;gap:5px;
+  transition:.15s;box-shadow:0 2px 6px rgba(0,0,0,.02);
+}
+.day:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.day.locked{opacity:.42;cursor:not-allowed;background:#f1f3f0}
+.day.done{background:var(--mint);border-color:#b9d8c4}
+.day.current{border:2px solid var(--green)}
+.day-emoji{font-size:23px}
+.day-num{font-size:11px;color:var(--muted);font-weight:800}
+.day-label{font-size:12px;font-weight:800;line-height:1.25}
+.day-check{font-size:11px;color:var(--green);font-weight:900}
+.card{
+  background:white;border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;box-shadow:var(--shadow);margin-bottom:17px;
+}
+.lesson-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:15px;
+  flex-wrap:wrap;margin-bottom:18px;
+}
+.lesson-header h2{margin:0 0 7px;font-size:26px;letter-spacing:-.8px}
+.lesson-header p{margin:0;color:var(--muted);font-size:14px}
+.tag{
+  background:var(--mint);color:var(--green-dark);
+  font-size:11px;font-weight:850;padding:7px 11px;border-radius:30px;
+}
+.tabs{
+  display:flex;gap:7px;overflow:auto;padding-bottom:5px;margin-bottom:18px;
+}
+.tab{
+  border:1px solid var(--line);background:white;padding:10px 15px;
+  border-radius:13px;font-size:13px;font-weight:800;white-space:nowrap;color:var(--ink);
+}
+.tab.active{background:var(--green);color:white;border-color:var(--green)}
+.word-list{display:flex;flex-direction:column;gap:10px}
+.word{
+  border:1px solid var(--line);border-radius:17px;padding:14px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.word-left{min-width:0}
+.word-sv{font-weight:850;font-size:18px}
+.word-en{font-size:13px;color:var(--muted);margin-top:4px}
+.word-meta{font-size:11px;color:var(--green);font-weight:750;margin-top:5px}
+.audio-btn{
+  border:1px solid #dce8df;background:#f1f7f2;color:var(--green-dark);
+  border-radius:13px;width:43px;height:43px;flex-shrink:0;
+  display:grid;place-items:center;font-size:18px;
+}
+.audio-btn:hover{background:#dcefe2}
+.audio-btn:disabled{opacity:.45}
+.sentence{
+  border:1px solid var(--line);border-radius:19px;padding:17px;margin-bottom:12px;
+}
+.sentence-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sentence-sv{font-size:18px;line-height:1.6;font-weight:800}
+.sentence-en{color:var(--muted);font-size:14px;line-height:1.5;margin-top:7px}
+.sentence-note{font-size:12px;color:var(--green);margin-top:8px}
+.action-row{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}
+.btn{
+  border:none;border-radius:14px;padding:12px 17px;
+  font-weight:850;font-size:13px;
+}
+.btn-primary{background:var(--green);color:white}
+.btn-primary:hover{background:var(--green-dark)}
+.btn-soft{background:var(--mint);color:var(--green-dark)}
+.btn-neutral{background:#eef1ee;color:var(--ink)}
+.btn-warning{background:#fff0dd;color:#7e5822}
+.grammar-box{
+  background:#f4f8f3;border:1px solid #e0eae0;border-radius:19px;padding:19px;
+  margin-bottom:14px;
+}
+.grammar-box h3{margin:0 0 9px;font-size:18px}
+.grammar-box p{line-height:1.7;margin:8px 0;font-size:14px}
+.grammar-example{
+  background:white;padding:12px 14px;border-radius:13px;margin-top:10px;
+  font-weight:750;line-height:1.7;
+}
+.tip{
+  border-radius:17px;padding:16px;background:var(--yellow);
+  font-size:13px;line-height:1.65;margin:12px 0;
+}
+.fact{
+  background:var(--blue);border-radius:17px;padding:17px;
+  font-size:13px;line-height:1.7;margin:12px 0;
+}
+.quiz-question{font-weight:850;font-size:18px;margin:0 0 16px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-option{
+  background:white;border:1px solid var(--line);border-radius:15px;padding:14px;
+  font-weight:750;text-align:left;
+}
+.quiz-option:hover{border-color:var(--green)}
+.quiz-option.correct{background:#e2f2e6;border-color:#70a982}
+.quiz-option.incorrect{background:#fae9e6;border-color:#d9998c}
+.feedback{margin-top:12px;font-size:14px;font-weight:750}
+.dialogue{
+  background:#f7f9f6;border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:10px;
+}
+.dialogue-line{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.6}
+.dialogue-line:last-child{border-bottom:0}
+.dialogue-line strong{color:var(--green)}
+.complete-banner{
+  text-align:center;background:var(--mint);border-radius:20px;padding:23px;margin-top:18px;
+}
+.complete-banner h3{font-size:23px;margin:0 0 8px}
+.complete-banner p{color:#536b5c;margin:0 0 16px}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:35px}
+.hidden{display:none!important}
+select{
+  border:1px solid var(--line);background:white;padding:10px 13px;
+  border-radius:13px;font-weight:750;color:var(--ink);
+}
+#status{font-size:12px;color:var(--muted);min-height:17px;margin:6px 0}
+@media(max-width:850px){.path{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:600px){
+  .container{padding:17px 13px 55px}
+  .top-inner{padding:11px 13px}
+  .hero{padding:23px 20px}
+  .hero-art{font-size:47px}
+  .stat{padding:7px 9px;font-size:11px}
+  .path{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .day{min-height:105px;padding:9px}
+  .card{padding:17px}
+  .quiz-options{grid-template-columns:1fr}
+  .sentence-sv{font-size:16px}
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="top-inner">
+    <div class="logo">
+      <div class="logo-icon">S</div>
+      Swedish 365
+    </div>
+    <div class="top-stats">
+      <div class="stat"><span>🔥</span><b id="streak">0</span></b></div>
+      <div class="stat"><span>⭐</span><b id="xp">0</b> XP</div>
+      <div class="stat"><span>📚</span><b id="learned">0</b></div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Din svenska resa · Your Swedish journey</div>
+      <h1>Swedish, every day.</h1>
+      <p>Five new words. Real sentences. Useful grammar. A little Swedish every day adds up to a lot.</p>
+    </div>
+    <div class="hero-art">🌲</div>
+  </section>
+
+  <div class="progress-wrap">
+    <div class="progress-row">
+      <span>Your learning progress</span>
+      <span id="progressText">0 / 365 days</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="filters">
+      <button class="pill active" data-track="daily">🌿 Daily life</button>
+      <button class="pill" data-track="business">💼 Business</button>
+    </div>
+    <select id="levelSelect" aria-label="Select Swedish level">
+      <option value="A1">A1 · Beginner</option>
+      <option value="A2">A2 · Elementary</option>
+      <option value="B1">B1 · Intermediate</option>
+      <option value="B2">B2 · Upper intermediate</option>
+    </select>
+  </div>
+
+  <div class="section-title">
+    <h2>Learning path</h2>
+    <small>365 daily lessons</small>
+  </div>
+
+  <div id="path" class="path"></div>
+
+  <section class="card" id="lessonCard">
+    <div class="lesson-header">
+      <div>
+        <div class="eyebrow" id="lessonEyebrow">DAY 1</div>
+        <h2 id="lessonTitle">Your daily lesson</h2>
+        <p id="lessonSubtitle">Five words · Five sentences · Grammar · Practice</p>
+      </div>
+      <div class="tag" id="lessonLevel">A1</div>
+    </div>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="learn">📖 Learn</button>
+      <button class="tab" data-tab="listen">🎧 Listen</button>
+      <button class="tab" data-tab="grammar">✏️ Grammar</button>
+      <button class="tab" data-tab="practice">🧠 Practice</button>
+      <button class="tab" data-tab="use">💬 Use it</button>
+    </nav>
+
+    <div id="content"></div>
+    <div id="status" role="status"></div>
+  </section>
+
+  <div class="footer">Swedish 365 · Små steg varje dag 🌱</div>
+</main>
+
+<script>
+"use strict";
+
+/* =========================================================
+   SWEDISH 365 — DAILY CONTENT
+   Each track has its own vocabulary bank.
+   The system avoids counting a word as new more than once.
+========================================================= */
+
+const DAILY_WORDS = [
+["hej","hello","Greeting"],["tack","thank you","Polite word"],["snälla","please","Polite word"],
+["ursäkta","excuse me","Polite word"],["ja","yes","Basic"],["nej","no","Basic"],
+["idag","today","Time"],["imorgon","tomorrow","Time"],["igår","yesterday","Time"],
+["nu","now","Time"],["sen","later","Time"],["alltid","always","Time"],
+["ibland","sometimes","Time"],["ofta","often","Time"],["aldrig","never","Time"],
+["hem","home","Place"],["hus","house","Place"],["lägenhet","apartment","Place · en"],
+["rum","room","Place · ett"],["kök","kitchen","Place · ett"],["dörr","door","Object · en"],
+["fönster","window","Object · ett"],["bord","table","Object · ett"],["stol","chair","Object · en"],
+["säng","bed","Object · en"],["mat","food","Everyday"],["vatten","water","Everyday · ett"],
+["kaffe","coffee","Everyday · en"],["te","tea","Everyday · ett"],["frukost","breakfast","Everyday · en"],
+["lunch","lunch","Everyday · en"],["middag","dinner","Everyday · en"],
+["mjölk","milk","Everyday · en"],["bröd","bread","Everyday · ett"],["ost","cheese","Everyday · en"],
+["äpple","apple","Everyday · ett"],["frukt","fruit","Everyday · en"],
+["grönsak","vegetable","Everyday · en"],["affär","shop","Place · en"],["pris","price","Noun · ett"],
+["pengar","money","Noun · plural"],["kort","card","Noun · ett"],["kvitto","receipt","Noun · ett"],
+["jobb","job","Noun · ett"],["arbete","work","Noun · ett"],["kollega","colleague","Noun · en"],
+["chef","manager","Noun · en"],["möte","meeting","Noun · ett"],["tid","time","Noun · en"],
+["dag","day","Noun · en"],["vecka","week","Noun · en"],["månad","month","Noun · en"],
+["år","year","Noun · ett"],["familj","family","Noun · en"],["vän","friend","Noun · en"],
+["barn","child","Noun · ett"],["person","person","Noun · en"],["man","man","Noun · en"],
+["kvinna","woman","Noun · en"],["stad","city","Noun · en"],["land","country","Noun · ett"],
+["väg","road","Noun · en"],["buss","bus","Noun · en"],["tåg","train","Noun · ett"],
+["bil","car","Noun · en"],["cykel","bike","Noun · en"],["station","station","Noun · en"],
+["skola","school","Noun · en"],["språk","language","Noun · ett"],["bok","book","Noun · en"],
+["telefon","phone","Noun · en"],["dator","computer","Noun · en"],["nyckel","key","Noun · en"],
+["problem","problem","Noun · ett"],["lösning","solution","Noun · en"],
+["fråga","question","Noun · en"],["svar","answer","Noun · ett"],
+["väder","weather","Noun · ett"],["regn","rain","Noun · ett"],["sol","sun","Noun · en"],
+["kallt","cold","Adjective"],["varmt","warm","Adjective"],["bra","good","Adjective"],
+["dåligt","bad","Adjective"],["stor","big","Adjective"],["liten","small","Adjective"],
+["ny","new","Adjective"],["gammal","old","Adjective"],["glad","happy","Adjective"],
+["trött","tired","Adjective"],["hungrig","hungry","Adjective"],["stressad","stressed","Adjective"],
+["viktig","important","Adjective"],["enkelt","easy","Adjective"],["svårt","difficult","Adjective"],
+["snabb","fast","Adjective"],["långsam","slow","Adjective"],["nära","near","Adjective"],
+["långt","far","Adjective"],["här","here","Place"],["där","there","Place"],
+["vänster","left","Direction"],["höger","right","Direction"],["rakt","straight","Direction"],
+["öppet","open","Adjective"],["stängt","closed","Adjective"],["kanske","maybe","Expression"],
+["verkligen","really","Expression"],["precis","exactly","Expression"],["redan","already","Expression"],
+["fortfarande","still","Expression"],["tillsammans","together","Expression"],
+["behöver","need","Verb"],["vill","want","Verb"],["kan","can","Verb"],
+["måste","must","Verb"],["kommer","come / will","Verb"],["går","go / walk","Verb"],
+["äter","eat","Verb"],["dricker","drink","Verb"],["sover","sleep","Verb"],
+["läser","read","Verb"],["skriver","write","Verb"],["pratar","speak","Verb"],
+["lyssnar","listen","Verb"],["förstår","understand","Verb"],["lär","learn","Verb"],
+["köper","buy","Verb"],["betalar","pay","Verb"],["hittar","find","Verb"],
+["arbetar","work","Verb"],["börjar","begin","Verb"],["slutar","finish","Verb"],
+["ringer","call","Verb"],["väntar","wait","Verb"],["frågar","ask","Verb"],
+["säger","say","Verb"],["tänker","think","Verb"],["känner","feel","Verb"],
+["tycker","think / like","Verb"],["vet","know","Verb"],["gör","do","Verb"],
+["får","get / may","Verb"],["tar","take","Verb"],["ser","see","Verb"],
+["möter","meet","Verb"],["bokar","book","Verb"],["planerar","plan","Verb"],
+["försöker","try","Verb"],["väljer","choose","Verb"],["förändring","change","Noun · en"],
+["möjlighet","opportunity","Noun · en"],["framtid","future","Noun · en"],
+["mål","goal","Noun · ett"],["idé","idea","Noun · en"],["beslut","decision","Noun · ett"],
+["ansvar","responsibility","Noun · ett"],["utveckling","development","Noun · en"],
+["erfarenhet","experience","Noun · en"],["kunskap","knowledge","Noun · en"],
+["framgång","success","Noun · en"],["utmaning","challenge","Noun · en"],
+["samarbete","collaboration","Noun · ett"],["feedback","feedback","Noun"],
+["projekt","project","Noun · ett"],["kund","customer","Noun · en"],
+["företag","company","Noun · ett"],["produkt","product","Noun · en"],
+["tjänst","service","Noun · en"],["budget","budget","Noun · en"],
+["kostnad","cost","Noun · en"],["intäkt","revenue","Noun · en"],
+["rapport","report","Noun · en"],["resultat","result","Noun · ett"],
+["strategi","strategy","Noun · en"],["förslag","proposal","Noun · ett"],
+["avtal","agreement","Noun · ett"],["deadline","deadline","Noun"],
+["presentation","presentation","Noun · en"],["effektiv","efficient","Adjective"],
+["tydlig","clear","Adjective"],["flexibel","flexible","Adjective"],
+["professionell","professional","Adjective"],["hållbar","sustainable","Adjective"],
+["konkurrens","competition","Noun · en"],["marknad","market","Noun · en"],
+["förhandling","negotiation","Noun · en"],["leverantör","supplier","Noun · en"],
+["medarbetare","employee","Noun · en"],["ledning","management","Noun · en"],
+["organisation","organization","Noun · en"],["prioritet","priority","Noun · en"],
+["risk","risk","Noun · en"],["kvalitet","quality","Noun · en"],
+["kommunikation","communication","Noun · en"],["lön","salary","Noun · en"],
+["anställning","employment","Noun · en"],["arbetsplats","workplace","Noun · en"],
+["kontor","office","Noun · ett"],["distans","remote","Noun"],
+["överens","in agreement","Expression"],["sammanfattning","summary","Noun · en"],
+["förväntning","expectation","Noun · en"],["förbättring","improvement","Noun · en"],
+["alternativ","alternative","Noun · ett"],["kapacitet","capacity","Noun · en"],
+["resurs","resource","Noun · en"],["perspektiv","perspective","Noun · ett"],
+["trend","trend","Noun · en"],["analys","analysis","Noun · en"],
+["underlag","basis / supporting material","Noun · ett"],
+["genomförande","implementation","Noun · ett"],["uppföljning","follow-up","Noun · en"],
+["framför allt","above all","Expression"],["i längden","in the long run","Expression"],
+["å andra sidan","on the other hand","Expression"],["i samband med","in connection with","Expression"],
+["ta hänsyn till","take into account","Expression"],["komma överens","agree","Expression"],
+["se till att","make sure that","Expression"],["på grund av","because of","Expression"]
+];
+
+const BUSINESS_WORDS = [
+["möte","meeting","Noun · ett"],["agenda","agenda","Noun · en"],["kund","customer","Noun · en"],
+["företag","company","Noun · ett"],["chef","manager","Noun · en"],["kollega","colleague","Noun · en"],
+["projekt","project","Noun · ett"],["deadline","deadline","Noun"],["budget","budget","Noun · en"],
+["rapport","report","Noun · en"],["resultat","result","Noun · ett"],["förslag","proposal","Noun · ett"],
+["beslut","decision","Noun · ett"],["ansvar","responsibility","Noun · ett"],
+["mål","goal","Noun · ett"],["plan","plan","Noun · en"],["strategi","strategy","Noun · en"],
+["utveckling","development","Noun · en"],["lösning","solution","Noun · en"],
+["problem","problem","Noun · ett"],["samarbete","collaboration","Noun · ett"],
+["kommunikation","communication","Noun · en"],["feedback","feedback","Noun"],
+["kvalitet","quality","Noun · en"],["leverantör","supplier","Noun · en"],
+["produkt","product","Noun · en"],["tjänst","service","Noun · en"],
+["kostnad","cost","Noun · en"],["intäkt","revenue","Noun · en"],
+["marknad","market","Noun · en"],["förhandling","negotiation","Noun · en"],
+["avtal","agreement","Noun · ett"],["organisation","organization","Noun · en"],
+["ledning","management","Noun · en"],["medarbetare","employee","Noun · en"],
+["arbetsplats","workplace","Noun · en"],["kontor","office","Noun · ett"],
+["prioritet","priority","Noun · en"],["risk","risk","Noun · en"],
+["resurs","resource","Noun · en"],["kapacitet","capacity","Noun · en"],
+["förväntning","expectation","Noun · en"],["förbättring","improvement","Noun · en"],
+["alternativ","alternative","Noun · ett"],["analys","analysis","Noun · en"],
+["underlag","supporting material","Noun · ett"],["uppföljning","follow-up","Noun · en"],
+["genomförande","implementation","Noun · ett"],["presentation","presentation","Noun · en"],
+["professionell","professional","Adjective"],["effektiv","efficient","Adjective"],
+["tydlig","clear","Adjective"],["flexibel","flexible","Adjective"],
+["hållbar","sustainable","Adjective"],["lön","salary","Noun · en"],
+["anställning","employment","Noun · en"],["distansarbete","remote work","Noun"],
+["konkurrens","competition","Noun · en"],["framgång","success","Noun · en"],
+["utmaning","challenge","Noun · en"],["möjlighet","opportunity","Noun · en"],
+["erfarenhet","experience","Noun · en"],["kunskap","knowledge","Noun · en"],
+["framtid","future","Noun · en"],["förändring","change","Noun · en"],
+["perspektiv","perspective","Noun · ett"],["trend","trend","Noun · en"],
+["sammanfattning","summary","Noun · en"],["diskussion","discussion","Noun · en"],
+["överens","in agreement","Expression"],["framför allt","above all","Expression"],
+["i längden","in the long run","Expression"],["å andra sidan","on the other hand","Expression"],
+["i samband med","in connection with","Expression"],["ta hänsyn till","take into account","Expression"],
+["komma överens","agree","Expression"],["se till att","make sure that","Expression"]
+];
+
+/* =========================================================
+   GRAMMAR
+========================================================= */
+
+const GRAMMAR = [
+{
+title:"Present tense · Presens",
+desc:"Swedish present tense is often formed by adding -r or -er to the verb. Many verbs have a regular pattern, but some are irregular.",
+examples:["Jag arbetar idag. — I work today.","Hon bor i Stockholm. — She lives in Stockholm.","Vi pratar svenska. — We speak Swedish."],
+tip:"Present tense can describe what you do now and habits. Context often tells you which meaning is intended."
+},
+{
+title:"En and ett · Nouns",
+desc:"Swedish nouns have grammatical gender: en-words and ett-words. Learn the article together with every noun.",
+examples:["en bok → boken (a/the book)","ett hus → huset (a/the house)","en kollega → kollegan (a/the colleague)"],
+tip:"There are patterns, but exceptions are common. Learning en/ett with the noun is the best habit."
+},
+{
+title:"Word order · Main clauses",
+desc:"In a normal Swedish main clause, the verb usually comes in the second position (V2). The first position can be a time expression or another element.",
+examples:["Jag arbetar hemma idag. — I work from home today.","Idag arbetar jag hemma. — Today I work from home.","På måndag har vi ett möte. — On Monday we have a meeting."],
+tip:"If you begin with Idag, the verb moves before the subject: Idag arbetar jag."
+},
+{
+title:"Negation · Inte",
+desc:"Inte usually comes after the finite verb in main clauses.",
+examples:["Jag förstår inte. — I don't understand.","Vi arbetar inte idag. — We aren't working today.","Hon kommer inte imorgon. — She isn't coming tomorrow."],
+tip:"In a simple main clause, remember: subject + verb + inte."
+},
+{
+title:"Questions · Frågor",
+desc:"Questions often begin with a question word, or with the verb when there is no question word.",
+examples:["Var bor du? — Where do you live?","När börjar mötet? — When does the meeting start?","Kommer du idag? — Are you coming today?"],
+tip:"Common question words: vad (what), vem (who), var (where), när (when), hur (how), varför (why)."
+},
+{
+title:"Past tense · Preteritum",
+desc:"Use preteritum for completed events in the past. Many verbs use -de or -te, while some are irregular.",
+examples:["Jag arbetade igår. — I worked yesterday.","Vi köpte kaffe. — We bought coffee.","Hon kom sent. — She arrived late."],
+tip:"Learn irregular verbs as pairs: kommer → kom, går → gick, ser → såg."
+},
+{
+title:"Future · Ska and kommer att",
+desc:"Use ska for plans and intentions. Kommer att is often used for predictions or things expected to happen.",
+examples:["Jag ska ringa imorgon. — I will call tomorrow.","Det kommer att regna. — It will rain.","Vi ska ha ett möte. — We will have a meeting."],
+tip:"For many everyday plans, ska + infinitive is the most natural choice."
+},
+{
+title:"Adjectives · Adjektiv",
+desc:"Adjectives change depending on the noun. An adjective often gets -t with ett-words and -a in plural or definite forms.",
+examples:["en stor bil — a big car","ett stort hus — a big house","stora hus — big houses"],
+tip:"Try to learn adjectives with an en example, an ett example, and a plural example."
+},
+{
+title:"Modal verbs · Kan, vill, måste",
+desc:"Modal verbs are followed by the infinitive without att.",
+examples:["Jag kan prata svenska. — I can speak Swedish.","Vi vill boka ett möte. — We want to book a meeting.","Du måste läsa rapporten. — You must read the report."],
+tip:"Modal + infinitive: kan göra, vill gå, måste arbeta."
+},
+{
+title:"Subordinate clauses · Bisatser",
+desc:"In a subordinate clause with inte, the word order is commonly subject + inte + verb.",
+examples:["Jag stannar eftersom jag inte är trött. — I stay because I am not tired.","Hon säger att hon inte kan komma. — She says that she can't come."],
+tip:"A useful memory rule: in subordinate clauses, inte usually comes before the verb."
+},
+{
+title:"Perfect · Har + supinum",
+desc:"Use har + supinum to describe an action or experience connected to the present.",
+examples:["Jag har arbetat här. — I have worked here.","Vi har redan ätit. — We have already eaten.","Har du sett filmen? — Have you seen the film?"],
+tip:"Common forms: göra → gjort, skriva → skrivit, gå → gått, se → sett."
+},
+{
+title:"Comparisons · Jämförelser",
+desc:"Compare things with adjectives. Many adjectives form comparisons using -are and -ast.",
+examples:["snabb – snabbare – snabbast (fast)","billig – billigare – billigast (cheap)","Det här är bättre. — This is better."],
+tip:"Some common irregular forms: bra → bättre → bäst; dålig → sämre → sämst."
+}
+];
+
+/* =========================================================
+   DAILY THEMES, SENTENCES, DIALOGUES, FACTS
+========================================================= */
+
+const DAILY_THEMES = [
+"Morning routine","At the café","Getting around","Shopping","At home",
+"Meeting friends","Weather and seasons","At the supermarket","Making plans",
+"Health and wellbeing","Free time","Travel","Food and cooking","Work and study",
+"Your neighbourhood","Phone conversations","Making requests","Weekend plans",
+"Getting to know people","Everyday problems","Swedish culture"
+];
+
+const BUSINESS_THEMES = [
+"Introducing yourself at work","Team meetings","Project planning","Customer communication",
+"Presentations","Giving feedback","Setting priorities","Negotiation","Problem solving",
+"Business travel","Recruitment","Budget discussions","Reporting results",
+"Working remotely","Professional networking","Strategy","Deadlines","Decision making",
+"Workplace communication","Leadership","Project follow-up"
+];
+
+const DAILY_SENTENCES = [
+[
+["Jag vaknar klockan sju.","I wake up at seven."],
+["Jag äter frukost hemma.","I eat breakfast at home."],
+["Jag dricker kaffe innan jobbet.","I drink coffee before work."],
+["Jag tar bussen till centrum.","I take the bus to the city centre."],
+["På kvällen läser jag en bok.","In the evening I read a book."]
+],
+[
+["Jag skulle vilja ha en kaffe, tack.","I would like a coffee, please."],
+["Kan jag få menyn?","Can I have the menu?"],
+["Vad kostar det?","How much does it cost?"],
+["Jag betalar med kort.","I'll pay by card."],
+["Det var väldigt gott.","That was very good."]
+],
+[
+["Var ligger stationen?","Where is the station?"],
+["Bussen kommer om fem minuter.","The bus arrives in five minutes."],
+["Jag går till jobbet idag.","I'm walking to work today."],
+["Tåget är lite försenat.","The train is a little delayed."],
+["Vi ses vid ingången.","We'll meet by the entrance."]
+],
+[
+["Jag behöver köpa några saker.","I need to buy a few things."],
+["Var hittar jag mjölken?","Where can I find the milk?"],
+["Det här är ganska billigt.","This is quite cheap."],
+["Har ni en större storlek?","Do you have a larger size?"],
+["Jag tar den här, tack.","I'll take this one, thanks."]
+],
+[
+["Jag är hemma ikväll.","I'm home tonight."],
+["Kan du öppna fönstret?","Can you open the window?"],
+["Det är varmt i köket.","It's warm in the kitchen."],
+["Jag städar på lördag.","I'll clean on Saturday."],
+["Var ligger mina nycklar?","Where are my keys?"]
+]
+];
+
+const BUSINESS_SENTENCES = [
+[
+["Jag arbetar med ett nytt projekt.","I'm working on a new project."],
+["Vi har ett möte klockan tio.","We have a meeting at ten."],
+["Jag skickar rapporten idag.","I'll send the report today."],
+["Vad är nästa steg?","What is the next step?"],
+["Vi behöver tydliga mål.","We need clear goals."]
+],
+[
+["Kan vi gå igenom agendan?","Can we go through the agenda?"],
+["Jag håller med om förslaget.","I agree with the proposal."],
+["Vi behöver mer information.","We need more information."],
+["Vad är deadline för projektet?","What is the deadline for the project?"],
+["Jag återkommer med ett svar.","I'll get back to you with an answer."]
+],
+[
+["Vi behöver prioritera uppgifterna.","We need to prioritize the tasks."],
+["Projektet går enligt plan.","The project is going according to plan."],
+["Jag ansvarar för presentationen.","I'm responsible for the presentation."],
+["Kan vi boka ett nytt möte?","Can we book another meeting?"],
+["Tack för ett bra samarbete.","Thank you for a good collaboration."]
+],
+[
+["Vår budget behöver uppdateras.","Our budget needs to be updated."],
+["Kunden vill ha mer information.","The customer wants more information."],
+["Vi diskuterar möjliga lösningar.","We're discussing possible solutions."],
+["Jag uppskattar din feedback.","I appreciate your feedback."],
+["Vi följer upp detta nästa vecka.","We'll follow up on this next week."]
+],
+[
+["Vi har flera alternativ att välja mellan.","We have several options to choose from."],
+["Det är viktigt att vara tydlig.","It's important to be clear."],
+["Jag föreslår en annan strategi.","I suggest another strategy."],
+["Kan du sammanfatta resultatet?","Can you summarize the result?"],
+["Vi behöver fatta ett beslut.","We need to make a decision."]
+]
+];
+
+const DAILY_DIALOGUES = [
+[
+["A","Hej! Hur mår du?"],
+["B","Bra, tack. Och du?"],
+["A","Jo tack, det är bra."],
+["B","Vad ska du göra idag?"],
+["A","Jag ska jobba och sedan träffa en vän."]
+],
+[
+["A","Hej, vad får det lov att vara?"],
+["B","En kaffe, tack."],
+["A","Vill du ha något att äta också?"],
+["B","Nej tack, bara kaffe."],
+["A","Varsågod!"]
+],
+[
+["A","Ursäkta, var ligger stationen?"],
+["B","Gå rakt fram och sväng vänster."],
+["A","Är det långt?"],
+["B","Nej, ungefär fem minuter."],
+["A","Tack så mycket!"]
+]
+];
+
+const BUSINESS_DIALOGUES = [
+[
+["A","Har du tid för ett kort möte?"],
+["B","Ja, absolut. Vad gäller det?"],
+["A","Jag vill diskutera projektets status."],
+["B","Bra. Jag har uppdaterat rapporten."],
+["A","Perfekt, vi går igenom den tillsammans."]
+],
+[
+["A","Vad tycker du om förslaget?"],
+["B","Jag tycker att det ser bra ut."],
+["A","Finns det några risker?"],
+["B","Ja, vi behöver se över tidsplanen."],
+["A","Bra poäng. Vi tar med det."]
+],
+[
+["A","Hur går projektet?"],
+["B","Vi ligger ganska bra till."],
+["A","Finns det några utmaningar?"],
+["B","Vi behöver lite mer resurser."],
+["A","Okej, låt oss diskutera alternativen."]
+]
+];
+
+const FACTS = [
+"Swedish is a North Germanic language and is closely related to Norwegian and Danish.",
+"Swedish has pitch accent in many dialects. The melody of a word can sometimes distinguish meanings.",
+"Sweden has five national minority languages: Finnish, Meänkieli, Sami, Romani Chib and Yiddish.",
+The Swedish word fika describes a coffee break often enjoyed with something to eat—and company.",
+"Swedish often places the verb in the second position in main clauses, even if the sentence begins with a time expression.",
+"Sweden's formal you (Ni) exists, but du is standard in most everyday interactions.",
+"Swedish compound words are often written as one word, such as arbetsplats (workplace).",
+"Swedish vowels include å, ä and ö. They are separate letters, not simply decorated versions of a and o.",
+"Swedish has two grammatical genders in modern standard usage: common (en) and neuter (ett).",
+"Swedish speakers often use lagom to express a sense of balance or 'just the right amount'."
+];
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const STORAGE_KEY = "swedish365_v2";
+
+let saved;
+try {
+  saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+} catch(e) {
+  saved = {};
+}
+
+const state = {
+  track: saved.track || "daily",
+  level: saved.level || "A1",
+  day: saved.day || 1,
+  completed: saved.completed || {},
+  knownWords: saved.knownWords || {},
+  xp: saved.xp || 0,
+  streak: saved.streak || 0,
+  lastCompletedDate: saved.lastCompletedDate || "",
+  tab: "learn",
+  quizIndex: 0,
+  quizCorrect: 0,
+  quizAnswered: false,
+  currentAudio: null,
+  audioQueue: [],
+  queueActive: false
+};
+
+const $ = id => document.getElementById(id);
+
+function save(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+}
+
+function key(){
+  return state.track+"_"+state.level;
+}
+
+function trackName(){
+  return state.track==="daily"?"Daily Life":"Business Professional";
+}
+
+function levelIndex(){
+  return ["A1","A2","B1","B2"].indexOf(state.level);
+}
+
+/* =========================================================
+   LESSON GENERATION
+========================================================= */
+
+function getWords(){
+  const bank=state.track==="daily"?DAILY_WORDS:BUSINESS_WORDS;
+  const start=(state.day-1)*5;
+  let result=[];
+  for(let i=0;i<5;i++){
+    result.push(bank[(start+i)%bank.length]);
+  }
+  return result;
+}
+
+function getUniqueWordCount(){
+  return Object.keys(state.knownWords).length;
+}
+
+function getLearnedForCurrentTrack(){
+  const prefix=key()+"_";
+  return Object.keys(state.knownWords).filter(k=>k.startsWith(prefix)).length;
+}
+
+function getGrammar(){
+  const idx=((state.day-1)+levelIndex()*3)%GRAMMAR.length;
+  return GRAMMAR[idx];
+}
+
+function getSentences(){
+  const bank=state.track==="daily"?DAILY_SENTENCES:BUSINESS_SENTENCES;
+  let levelOffset=levelIndex();
+  return bank[(state.day-1+levelOffset)%bank.length];
+}
+
+function getDialogue(){
+  const bank=state.track==="daily"?DAILY_DIALOGUES:BUSINESS_DIALOGUES;
+  return bank[(state.day-1+levelIndex())%bank.length];
+}
+
+function getTheme(){
+  const bank=state.track==="daily"?DAILY_THEMES:BUSINESS_THEMES;
+  return bank[(state.day-1+levelIndex())%bank.length];
+}
+
+function getFact(){
+  return FACTS[(state.day-1)%FACTS.length];
+}
+
+function markWordsSeen(){
+  const words=getWords();
+  words.forEach(w=>{
+    const wordKey=key()+"_"+w[0];
+    if(!state.knownWords[wordKey]){
+      state.knownWords[wordKey]=Date.now();
+    }
+  });
+  save();
+  updateStats();
+}
+
+/* =========================================================
+   UI RENDERING
+========================================================= */
+
+function updateStats(){
+  $("streak").textContent=state.streak;
+  $("xp").textContent=state.xp;
+  $("learned").textContent=getUniqueWordCount();
+
+  const done=state.completed[key()]||[];
+  const percent=Math.round(done.length/365*100);
+  $("progressText").textContent=done.length+" / 365 days";
+  $("progressFill").style.width=percent+"%";
+}
+
+function renderPath(){
+  const done=state.completed[key()]||[];
+  const unlocked=done.length+1;
+  $("path").innerHTML="";
+
+  for(let d=1;d<=365;d++){
+    const isDone=done.includes(d);
+    const isLocked=d>unlocked&&!isDone;
+    const isCurrent=d===unlocked&&!isDone;
+    const themeBank=state.track==="daily"?DAILY_THEMES:BUSINESS_THEMES;
+    const label=themeBank[(d-1)%themeBank.length];
+
+    const button=document.createElement("button");
+    button.className="day"+(isDone?" done":"")+(isLocked?" locked":"")+(isCurrent?" current":"");
+    button.disabled=isLocked;
+    button.innerHTML=`
+      <div class="day-emoji">${isDone?"✓":isLocked?"🔒":isCurrent?"🌱":"📖"}</div>
+      <div class="day-num">DAY ${d}</div>
+      <div class="day-label">${label}</div>
+      ${isDone?'<div class="day-check">COMPLETED</div>':""}
+    `;
+    button.addEventListener("click",()=>{
+      if(!isLocked){
+        state.day=d;
+        state.tab="learn";
+        renderLesson();
+        $("lessonCard").scrollIntoView({behavior:"smooth",block:"start"});
+      }
+    });
+    $("path").appendChild(button);
+  }
+}
+
+function renderLesson(){
+  $("lessonEyebrow").textContent="DAY "+state.day+" · "+state.level;
+  $("lessonTitle").textContent=getTheme();
+  $("lessonSubtitle").textContent=trackName()+" · 5 words · 5 sentences · Grammar · Practice";
+  $("lessonLevel").textContent=state.level;
+  $("tabs").querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===state.tab));
+  renderTab();
+  renderPath();
+  updateStats();
+  save();
+}
+
+function renderTab(){
+  const c=$("content");
+  c.innerHTML="";
+  if(state.tab==="learn")renderLearn(c);
+  if(state.tab==="listen")renderListen(c);
+  if(state.tab==="grammar")renderGrammar(c);
+  if(state.tab==="practice")renderPractice(c);
+  if(state.tab==="use")renderUse(c);
+}
+
+/* =========================================================
+   LEARN TAB
+========================================================= */
+
+function renderLearn(c){
+  markWordsSeen();
+
+  const heading=document.createElement("div");
+  heading.className="section-title";
+  heading.innerHTML="<h2>Today's vocabulary</h2><small>5 words</small>";
+  c.appendChild(heading);
+
+  const list=document.createElement("div");
+  list.className="word-list";
+
+  getWords().forEach(w=>{
+    const row=document.createElement("div");
+    row.className="word";
+    row.innerHTML=`
+      <div class="word-left">
+        <div class="word-sv">${w[0]}</div>
+        <div class="word-en">${w[1]}</div>
+        <div class="word-meta">${w[2]}</div>
+      </div>
+      <button class="audio-btn" aria-label="Listen to ${w[0]}" title="Listen to Swedish pronunciation">♫</button>
+    `;
+    row.querySelector(".audio-btn").addEventListener("click",e=>playWord(w[0],e.currentTarget));
+    list.appendChild(row);
+  });
+  c.appendChild(list);
+
+  const sentHead=document.createElement("div");
+  sentHead.className="section-title";
+  sentHead.innerHTML="<h2>Useful sentences</h2><small>Read and listen</small>";
+  c.appendChild(sentHead);
+
+  getSentences().forEach(s=>{
+    const row=document.createElement("div");
+    row.className="sentence";
+    row.innerHTML=`
+      <div class="sentence-top">
+        <div class="sentence-sv">${s[0]}</div>
+        <button class="audio-btn" aria-label="Listen to sentence">♫</button>
+      </div>
+      <div class="sentence-en">${s[1]}</div>
+    `;
+    row.querySelector(".audio-btn").addEventListener("click",e=>playSentence(s[0],e.currentTarget));
+    c.appendChild(row);
+  });
+
+  const fact=document.createElement("div");
+  fact.className="fact";
+  fact.innerHTML="<strong>🇸🇪 Swedish fact</strong><br>"+getFact();
+  c.appendChild(fact);
+
+  const buttons=document.createElement("div");
+  buttons.className="action-row";
+  buttons.innerHTML=`
+    <button class="btn btn-primary" data-gotab="grammar">Continue to grammar →</button>
+    <button class="btn btn-soft" data-gotab="listen">Listening practice 🎧</button>
+  `;
+  c.appendChild(buttons);
+}
+
+/* =========================================================
+   LISTEN TAB
+========================================================= */
+
+function renderListen(c){
+  const intro=document.createElement("div");
+  intro.className="tip";
+  intro.innerHTML="<strong>🎧 Listening practice</strong><br>Listen to the five sentences. Try to recognize the words before looking at the English translations.";
+  c.appendChild(intro);
+
+  const all=document.createElement("div");
+  all.className="action-row";
+  all.innerHTML=`
+    <button class="btn btn-primary" id="listenAll">▶ Listen to all · 5 sentences</button>
+    <button class="btn btn-neutral" id="stopAudio">■ Stop</button>
+  `;
+  c.appendChild(all);
+
+  const status=document.createElement("div");
+  status.id="listenStatus";
+  status.className="feedback";
+  c.appendChild(status);
+
+  getSentences().forEach((s,i)=>{
+    const row=document.createElement("div");
+    row.className="sentence";
+    row.innerHTML=`
+      <div class="sentence-top">
+        <div><small style="color:var(--muted);font-weight:800">SENTENCE ${i+1}</small><div class="sentence-sv">${s[0]}</div></div>
+        <button class="audio-btn" aria-label="Listen">♫</button>
+      </div>
+      <div class="sentence-en">${s[1]}</div>
+    `;
+    row.querySelector(".audio-btn").addEventListener("click",e=>playSentence(s[0],e.currentTarget));
+    c.appendChild(row);
+  });
+
+  $("listenAll").addEventListener("click",()=>{
+    state.audioQueue=getSentences().map(s=>s[0]);
+    playQueue();
+  });
+  $("stopAudio").addEventListener("click",stopAudio);
+}
+
+/* =========================================================
+   GRAMMAR TAB
+========================================================= */
+
+function renderGrammar(c){
+  const g=getGrammar();
+  const box=document.createElement("div");
+  box.className="grammar-box";
+  box.innerHTML=`
+    <div class="eyebrow">Grammar focus · ${state.level}</div>
+    <h3>${g.title}</h3>
+    <p>${g.desc}</p>
+    <div class="grammar-example">${g.examples.join("<br>")}</div>
+  `;
+  c.appendChild(box);
+
+  const tip=document.createElement("div");
+  tip.className="tip";
+  tip.innerHTML="<strong>💡 Remember</strong><br>"+g.tip;
+  c.appendChild(tip);
+
+  const extras=[
+    ["A1","Focus on simple phrases, common verbs, pronouns and basic questions."],
+    ["A2","Start connecting sentences, using the past and describing routines."],
+    ["B1","Express opinions, explain reasons and describe experiences more naturally."],
+    ["B2","Practice nuance, longer subordinate clauses and professional language."]
+  ];
+  const extra=document.createElement("div");
+  extra.className="grammar-box";
+  extra.innerHTML="<h3>"+state.level+" learning focus</h3><p>"+extras[levelIndex()][1]+"</p>";
+  c.appendChild(extra);
+
+  const btn=document.createElement("div");
+  btn.className="action-row";
+  btn.innerHTML='<button class="btn btn-primary" data-gotab="practice">Practice this →</button>';
+  c.appendChild(btn);
+}
+
+/* =========================================================
+   PRACTICE TAB
+========================================================= */
+
+function getQuiz(){
+  const words=getWords();
+  const word=words[state.quizIndex%words.length];
+  const pool=state.track==="daily"?DAILY_WORDS:BUSINESS_WORDS;
+  let others=pool.filter(x=>x[0]!==word[0]&&x[1]!==word[1]);
+  others=shuffle(others).slice(0,3);
+  const options=shuffle([word,...others]);
+  return {word,options};
+}
+
+function shuffle(arr){
+  const copy=arr.slice();
+  for(let i=copy.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]]=[copy[j],copy[i]];
+  }
+  return copy;
+}
+
+function renderPractice(c){
+  state.quizAnswered=false;
+  state.quizCorrect=0;
+  state.quizIndex=0;
+  const intro=document.createElement("div");
+  intro.className="tip";
+  intro.innerHTML="<strong>🧠 Quick challenge</strong><br>Translate the Swedish word into English. Complete five questions to finish today's practice.";
+  c.appendChild(intro);
+
+  const quiz=document.createElement("div");
+  quiz.id="quiz";
+  c.appendChild(quiz);
+  renderQuizQuestion();
+
+  const reset=document.createElement("div");
+  reset.className="action-row";
+  reset.innerHTML='<button class="btn btn-neutral" id="resetQuiz">↻ Restart practice</button>';
+  c.appendChild(reset);
+  $("resetQuiz").addEventListener("click",()=>{
+    state.quizIndex=0;state.quizCorrect=0;state.quizAnswered=false;
+    renderQuizQuestion();
+  });
+}
+
+function renderQuizQuestion(){
+  const q=$("quiz");
+  if(!q)return;
+  if(state.quizIndex>=5){
+    q.innerHTML=`
+      <div class="complete-banner">
+        <h3>Practice complete! 🎉</h3>
+        <p>You got ${state.quizCorrect} out of 5 correct.</p>
+        <button class="btn btn-primary" id="quizAgain">Try again</button>
+      </div>`;
+    $("quizAgain").addEventListener("click",()=>{
+      state.quizIndex=0;state.quizCorrect=0;renderQuizQuestion();
+    });
+    return;
+  }
+  const current=getQuiz();
+  q.innerHTML=`
+    <div class="progress-row"><span>Question ${state.quizIndex+1} of 5</span><span>${state.quizCorrect} correct</span></div>
+    <div class="quiz-question">What does <strong>${current.word[0]}</strong> mean?</div>
+    <div class="quiz-options">
+      ${current.options.map(o=>`<button class="quiz-option" data-answer="${escapeHTML(o[0])}">${o[1]}</button>`).join("")}
+    </div>
+    <div id="quizFeedback" class="feedback"></div>
+    <div class="action-row"><button class="btn btn-primary hidden" id="nextQuestion">${state.quizIndex===4?"Finish":"Next question →"}</button></div>
+  `;
+
+  q.querySelectorAll(".quiz-option").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      if(state.quizAnswered)return;
+      state.quizAnswered=true;
+      const chosen=btn.dataset.answer;
+      const correct=current.word[0];
+      q.querySelectorAll(".quiz-option").forEach(b=>{
+        if(b.dataset.answer===correct)b.classList.add("correct");
+        b.disabled=true;
+      });
+      const feedback=$("quizFeedback");
+      if(chosen===correct){
+        state.quizCorrect++;
+        feedback.textContent="Correct! "+current.word[0]+" = "+current.word[1];
+        feedback.style.color="var(--green)";
+      }else{
+        btn.classList.add("incorrect");
+        feedback.textContent="Not quite. "+current.word[0]+" means "+current.word[1]+".";
+        feedback.style.color="#a34f42";
+      }
+      const next=$("nextQuestion");
+      next.classList.remove("hidden");
+      next.addEventListener("click",()=>{
+        state.quizIndex++;
+        state.quizAnswered=false;
+        renderQuizQuestion();
+      });
+    });
+  });
+}
+
+/* =========================================================
+   USE IT TAB
+========================================================= */
+
+function renderUse(c){
+  const intro=document.createElement("div");
+  intro.className="tip";
+  intro.innerHTML="<strong>💬 Put Swedish into real life</strong><br>Read the dialogue aloud. Try to answer the prompts without looking at the English translation.";
+  c.appendChild(intro);
+
+  const dialog=document.createElement("div");
+  dialog.className="dialogue";
+  getDialogue().forEach(line=>{
+    const row=document.createElement("div");
+    row.className="dialogue-line";
+    row.innerHTML="<strong>"+line[0]+":</strong> "+line[1];
+    dialog.appendChild(row);
+  });
+  c.appendChild(dialog);
+
+  const task=document.createElement("div");
+  task.className="grammar-box";
+  task.innerHTML=`
+    <h3>Your turn ✍️</h3>
+    <p>Write or say three sentences in Swedish about today's theme:</p>
+    <ul>
+      <li>One sentence about yourself.</li>
+      <li>One sentence using a word from today's vocabulary.</li>
+      <li>One question you could ask someone.</li>
+    </ul>
+    <textarea id="userSentences" placeholder="Skriv på svenska..." style="width:100%;min-height:110px;border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit"></textarea>
+  `;
+  c.appendChild(task);
+
+  const complete=document.createElement("div");
+  complete.className="complete-banner";
+  complete.innerHTML=`
+    <h3>Finish today's lesson 🌱</h3>
+    <p>Complete your practice and mark today's lesson as finished.</p>
+    <button class="btn btn-primary" id="completeLesson">Complete day ${state.day} ✓</button>
+  `;
+  c.appendChild(complete);
+
+  $("completeLesson").addEventListener("click",completeLesson);
+}
+
+function completeLesson(){
+  const k=key();
+  if(!state.completed[k])state.completed[k]=[];
+  if(!state.completed[k].includes(state.day)){
+    state.completed[k].push(state.day);
+    state.xp+=20;
+
+    const today=new Date().toISOString().slice(0,10);
+    if(state.lastCompletedDate!==today){
+      if(state.lastCompletedDate){
+        const prev=new Date(state.lastCompletedDate);
+        const current=new Date(today);
+        const diff=Math.round((current-prev)/(1000*60*60*24));
+        state.streak=diff===1?state.streak+1:1;
+      }else{
+        state.streak=1;
+      }
+      state.lastCompletedDate=today;
+    }
+  }
+  save();
+  updateStats();
+  renderPath();
+  $("status").textContent="Day completed! Your progress has been saved.";
+  $("completeLesson").textContent="Completed ✓";
+  $("completeLesson").disabled=true;
+  $("completeLesson").classList.add("btn-soft");
+}
+
+/* =========================================================
+   AUDIO — TATOEBA COMMUNITY RECORDINGS
+   No Google Translate TTS fallback.
+========================================================= */
+
+function stopAudio(){
+  if(state.currentAudio){
+    try{
+      state.currentAudio.pause();
+      state.currentAudio.currentTime=0;
+    }catch(e){}
+  }
+  state.currentAudio=null;
+  state.queueActive=false;
+  state.audioQueue=[];
+  $("status").textContent="Audio stopped.";
+}
+
+async function findTatoebaAudio(text){
+  try{
+    const url="https://api.tatoeba.org/v1/sentences?lang=swe&q="+encodeURIComponent(text)+"&has_audio=yes&limit=10";
+    const response=await fetch(url);
+    if(!response.ok)throw new Error("Audio search unavailable");
+    const data=await response.json();
+    if(!data.data||!data.data.length)return null;
+
+    const normalize=s=>String(s||"").trim().toLowerCase().replace(/[.!?]+$/,"");
+    const exact=data.data.find(s=>normalize(s.text)===normalize(text));
+    if(!exact)return null;
+
+    return "https://audio.tatoeba.org/sentences/swe/"+exact.id+".mp3";
+  }catch(e){
+    return null;
+  }
+}
+
+async function playSentence(text,button){
+  stopAudio();
+  $("status").textContent="Finding a Swedish recording…";
+  if(button)button.textContent="…";
+
+  const url=await findTatoebaAudio(text);
+  if(!url){
+    if(button)button.textContent="♫";
+    $("status").textContent="No matching community recording found for this sentence.";
+    return false;
+  }
+
+  return playURL(url,button);
+}
+
+async function playWord(word,button){
+  stopAudio();
+  $("status").textContent="Finding a Swedish recording…";
+  if(button)button.textContent="…";
+
+  const url=await findTatoebaAudio(word);
+  if(!url){
+    if(button)button.textContent="♫";
+    $("status").textContent="No matching community recording found for this word.";
+    return false;
+  }
+  return playURL(url,button);
+}
+
+function playURL(url,button){
+  return new Promise(resolve=>{
+    const audio=new Audio(url);
+    state.currentAudio=audio;
+    if(button)button.textContent="▶";
+    $("status").textContent="Playing Swedish audio…";
+
+    audio.onended=()=>{
+      if(button)button.textContent="♫";
+      state.currentAudio=null;
+      resolve(true);
+    };
+    audio.onerror=()=>{
+      if(button)button.textContent="♫";
+      state.currentAudio=null;
+      $("status").textContent="The recording could not be played.";
+      resolve(false);
+    };
+
+    audio.play().then(()=>{}).catch(()=>{
+      if(button)button.textContent="♫";
+      state.currentAudio=null;
+      $("status").textContent="Audio playback was blocked or unavailable.";
+      resolve(false);
+    });
+  });
+}
+
+async function playQueue(){
+  if(state.queueActive)return;
+  state.queueActive=true;
+  const queue=state.audioQueue.slice();
+  $("status").textContent="Playing all sentences…";
+
+  for(let i=0;i<queue.length;i++){
+    if(!state.queueActive)break;
+    $("status").textContent="Sentence "+(i+1)+" of "+queue.length;
+    const result=await playURLFromQueue(queue[i]);
+    if(!state.queueActive)break;
+    // Two-second pause between sentences
+    if(i<queue.length-1){
+      await new Promise(resolve=>setTimeout(resolve,2000));
+    }
+  }
+
+  if(state.queueActive){
+    $("status").textContent="Listening complete!";
+  }
+  state.queueActive=false;
+  state.audioQueue=[];
+}
+
+async function playURLFromQueue(text){
+  const url=await findTatoebaAudio(text);
+  if(!url){
+    $("status").textContent="No recording for: "+text;
+    return false;
+  }
+  return playURL(url,null);
+}
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+$("tabs").addEventListener("click",e=>{
+  const button=e.target.closest("[data-tab]");
+  if(!button)return;
+  state.tab=button.dataset.tab;
+  renderLesson();
+});
+
+$("content").addEventListener("click",e=>{
+  const button=e.target.closest("[data-gotab]");
+  if(!button)return;
+  state.tab=button.dataset.gotab;
+  renderLesson();
+});
+
+document.querySelectorAll("[data-track]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    state.track=button.dataset.track;
+    state.day=1;
+    state.tab="learn";
+    state.quizIndex=0;
+    state.quizCorrect=0;
+    document.querySelectorAll("[data-track]").forEach(b=>b.classList.toggle("active",b===button));
+    renderLesson();
+  });
+});
+
+$("levelSelect").addEventListener("change",()=>{
+  state.level=$("levelSelect").value;
+  state.day=1;
+  state.tab="learn";
+  renderLesson();
+});
+
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+
+$("levelSelect").value=state.level;
+document.querySelectorAll("[data-track]").forEach(b=>b.classList.toggle("active",b.dataset.track===state.track));
+renderLesson();
+
+</script>
+</body>
+</html>
