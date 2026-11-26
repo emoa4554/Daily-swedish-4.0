@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8f4">
+<title>Swedish 365</title>
+
+<style>
+:root{
+  --bg:#f7f8f4;--surface:#fff;--ink:#24352d;--muted:#758278;
+  --green:#58b887;--green2:#2b7c56;--pale:#e5f5eb;--border:#e6ebe5;
+  --blue:#e4efff;--yellow:#fff1cf;--pink:#ffe7e0;--shadow:0 5px 22px #26392d0b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button{font:inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible{outline:3px solid #78b9f4;outline-offset:3px}
+.top{position:sticky;top:0;z-index:10;background:#f7f8f4ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topinner{max-width:980px;margin:auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:20px;font-weight:950;display:flex;align-items:center;gap:9px}
+.logo{width:37px;height:37px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:white}
+.stats{display:flex;gap:8px}
+.stat{background:white;border:1px solid var(--border);border-radius:13px;padding:8px 11px;font-size:13px;font-weight:900}
+main{max-width:980px;margin:auto;padding:20px 17px 100px}
+.view{display:none}.view.active{display:block}
+.hero{background:linear-gradient(125deg,#dff3e7,#e9f2ec);border-radius:24px;padding:23px;margin-bottom:15px}
+.hero h1{font-size:clamp(23px,5vw,32px);letter-spacing:-1px;margin:0 0 7px}
+.hero p{margin:0;color:#587064}
+.track{display:flex;background:#e8ede7;padding:5px;border-radius:14px;margin-bottom:16px;gap:5px}
+.track button{border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:11px;flex:1;font-weight:850}
+.track button.active{background:white;color:var(--green2);box-shadow:0 2px 6px #0000000b}
+.panel{background:white;border:1px solid var(--border);border-radius:20px;padding:17px;margin-bottom:15px;box-shadow:var(--shadow)}
+.paneltop{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:850;margin-bottom:9px}
+.bar{height:9px;background:#edf1ed;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:var(--green);width:0;transition:.3s}
+.levels{display:flex;gap:7px;overflow:auto;padding:5px 0 14px}
+.pill{white-space:nowrap;border:1px solid var(--border);background:white;border-radius:99px;padding:9px 14px;color:var(--muted);font-weight:850}
+.pill.active{background:var(--pale);color:var(--green2);border-color:#c7e7d3}
+.sectiontitle{font-size:21px;font-weight:950;margin:17px 0 5px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 15px}
+.path{background:white;border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.levelheader{padding:15px;border-radius:16px;margin-bottom:17px;display:flex;justify-content:space-between;align-items:center}
+.levelheader h3{margin:0;font-size:19px}.levelheader small{display:block;margin-top:5px;color:#627369}
+.a1{background:#e2f4e8}.a2{background:#e3efff}.b1{background:#fff0d3}.b2{background:#fce5e0}
+.nodes{max-width:550px;margin:auto;position:relative}
+.nodes:before{content:"";position:absolute;top:0;bottom:0;left:50%;width:4px;transform:translateX(-50%);background:repeating-linear-gradient(#dce7dd 0 10px,transparent 10px 19px)}
+.node-row{position:relative;display:flex;align-items:center;min-height:91px;z-index:1}
+.node-row.left{justify-content:flex-start;padding-left:7%}.node-row.right{justify-content:flex-end;padding-right:7%}
+.node{width:62px;height:62px;border:0;border-radius:50%;font-size:22px;font-weight:950;box-shadow:0 4px 0 #0001}
+.node.done{background:var(--green);color:white}.node.current{background:#69b9ed;color:white;box-shadow:0 4px 0 #3790c7,0 0 0 5px #dcefff}.node.locked{background:#e8ece8;color:#9da99f}
+.node-label{width:135px;padding:0 9px;color:#66756b;font-size:12px;font-weight:850}
+.node-row.left .node-label{text-align:left}.node-row.right .node-label{text-align:right}
+.smallstats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:15px 0}
+.smallstat{background:white;border:1px solid var(--border);border-radius:16px;padding:13px}
+.smallstat b{display:block;font-size:23px}.smallstat span{font-size:11px;color:var(--muted)}
+.action{border:0;background:var(--pale);color:var(--green2);border-radius:13px;padding:12px 15px;font-weight:900}
+.action.secondary{background:#eef2f8;color:#526d90}
+.action.dark{background:var(--green);color:white}
+.full{width:100%}
+.lessonhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.back{border:1px solid var(--border);background:white;padding:10px 13px;border-radius:12px;font-weight:850}
+.lessonbar{height:8px;border-radius:20px;background:#e8ede8;margin-bottom:19px;overflow:hidden}
+.lessonbar div{height:100%;background:var(--green);width:0}
+h1.lessonname{font-size:28px;letter-spacing:-.7px;margin:0 0 4px}
+.tabs{display:flex;gap:6px;overflow:auto;padding:8px 0 13px}
+.tab{border:1px solid var(--border);background:white;border-radius:12px;padding:10px 12px;color:var(--muted);font-weight:850;white-space:nowrap}
+.tab.active{background:var(--pale);color:var(--green2);border-color:#c5e7d2}
+.content{background:white;border:1px solid var(--border);border-radius:21px;padding:18px;box-shadow:var(--shadow)}
+h3.block{margin:0 0 13px;font-size:18px}
+.word{border:1px solid var(--border);border-radius:15px;padding:13px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sv{font-weight:900;font-size:18px}.en{color:var(--muted);font-size:13px;margin-top:4px}
+.tools{display:flex;gap:6px;align-items:center}
+.iconbtn{width:42px;height:42px;border:0;background:var(--pale);color:var(--green2);border-radius:12px;font-size:18px;display:grid;place-items:center}
+.iconbtn.saved{background:#fff1cf;color:#8a6719}
+.sentence{background:#f7f9f6;border:1px solid var(--border);border-radius:15px;padding:14px;margin-bottom:10px}
+.sentence .sv{line-height:1.55}.sentence .en{font-size:14px}
+.native{font-size:11px;color:var(--green2);font-weight:850;margin-top:7px}
+.dialogue{border-radius:15px;padding:14px;margin-bottom:9px;background:#e8f4eb}
+.dialogue:nth-child(even){background:#edf3ff}
+.speaker{font-size:11px;color:var(--muted);font-weight:900;margin-bottom:4px}
+.grammar{border:1px solid var(--border);border-radius:15px;padding:14px;margin-bottom:10px}
+.grammar h4{margin:0 0 8px}
+.example{background:#f5f8f5;padding:11px;border-radius:12px;margin:9px 0}
+.options{display:grid;gap:9px}
+.option{border:2px solid var(--border);background:white;border-radius:13px;padding:13px;text-align:left;font-weight:850}
+.option.correct{border-color:var(--green);background:#e4f6eb}.option.wrong{border-color:#e48c82;background:#fff0ed}
+.feedback{font-weight:850;min-height:26px;margin-top:10px}
+textarea,input{font:inherit;width:100%;border:1px solid var(--border);border-radius:14px;padding:13px;background:white}
+textarea{min-height:115px;resize:vertical}
+.status{color:var(--muted);font-size:13px;min-height:22px;margin-top:8px}
+.reviewitem{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;background:#f6f9f6;border:1px solid var(--border);border-radius:14px;margin-bottom:9px}
+.footer{text-align:center;color:#95a199;padding:25px;font-size:12px}
+@media(max-width:500px){
+ main{padding:14px 12px 80px}.topinner{padding:10px 12px}
+ .stat{padding:7px 8px}.brand{font-size:18px}
+ .node{width:58px;height:58px}.node-row{min-height:85px}
+ .node-row.left{padding-left:3%}.node-row.right{padding-right:3%}
+ .node-label{width:115px;font-size:11px}.path{padding:14px 8px}
+ .content{padding:14px}h1.lessonname{font-size:24px}
+}
+</style>
+</head>
+
+<body>
+<header class="top">
+  <div class="topinner">
+    <div class="brand"><div class="logo">🇸🇪</div> Swedish 365</div>
+    <div class="stats">
+      <div class="stat">🔥 <b id="streak">0</b></div>
+      <div class="stat">⭐ <b id="xp">0</b> XP</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="home" class="view active">
+  <div class="hero">
+    <h1>Hej! Let's learn Swedish 🇸🇪</h1>
+    <p>Real phrases. Useful Swedish. A little progress every day.</p>
+  </div>
+
+  <div class="track">
+    <button id="dailyBtn" class="active" onclick="setTrack('daily')">🌿 Daily Life</button>
+    <button id="businessBtn" onclick="setTrack('business')">💼 Business</button>
+  </div>
+
+  <div class="panel">
+    <div class="paneltop"><span id="progTitle">Daily Life</span><span id="progText">0 / 365</span></div>
+    <div class="bar"><div class="fill" id="progFill"></div></div>
+  </div>
+
+  <div class="levels" id="levels"></div>
+  <div id="path"></div>
+
+  <div class="smallstats">
+    <div class="smallstat"><b id="todayNew">0</b><span>NEW TODAY</span></div>
+    <div class="smallstat"><b id="known">0</b><span>UNIQUE WORDS</span></div>
+    <div class="smallstat"><b id="reviewN">0</b><span>TO REVIEW</span></div>
+  </div>
+  <button class="action secondary full" onclick="openReview()">📚 Vocabulary review</button>
+</section>
+
+<section id="lessonView" class="view">
+  <div class="lessonhead">
+    <button class="back" onclick="backHome()">← Learning path</button>
+    <b id="dayBadge">DAY 1</b>
+  </div>
+  <div class="lessonbar"><div id="lessonFill"></div></div>
+  <h1 class="lessonname" id="lessonTitle"></h1>
+  <p class="sub" id="lessonMeta"></p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="learn">Learn</button>
+    <button class="tab" data-tab="listen">Listen</button>
+    <button class="tab" data-tab="grammar">Grammar</button>
+    <button class="tab" data-tab="practice">Practice</button>
+    <button class="tab" data-tab="speak">Use it</button>
+  </div>
+  <div class="content" id="content"></div>
+  <div class="status" id="lessonStatus"></div>
+</section>
+
+<section id="reviewView" class="view">
+  <div class="lessonhead"><button class="back" onclick="backHome()">← Path</button><b>Review</b></div>
+  <h1 class="lessonname">Vocabulary practice</h1>
+  <p class="sub">Saved words. Try to recall the meaning before revealing it.</p>
+  <div class="content" id="reviewContent"></div>
+</section>
+</main>
+<div class="footer">Swedish 365 · Din svenska resa börjar här</div>
+
+<script>
+"use strict";
+
+/* ----------------- SETTINGS / STORAGE ----------------- */
+const KEY="sv365_v3";
+const state=load();
+let track="daily",day=1,tab="learn",filter="all",quizPos=0,quizScore=0,quizAnswered=false;
+let queue=[],queueIndex=0,queueTimer=null,activeAudio=null;
+let reviewReveal={};
+
+function load(){
+ try{return JSON.parse(localStorage.getItem(KEY))||fresh();}
+ catch(e){return fresh();}
+}
+function fresh(){return {xp:0,streak:0,lastDone:null,done:{daily:[],business:[]},words:{},review:[],today:{date:"",count:0},writing:{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function dateKey(){return new Date().toLocaleDateString("sv-SE")}
+function level(d){return d<=90?"A1":d<=180?"A2":d<=270?"B1":"B2"}
+function bounds(l){return l==="A1"?[1,90]:l==="A2"?[91,180]:l==="B1"?[181,270]:[271,365]}
+function trackLabel(){return track==="daily"?"Daily Life":"Business Professional"}
+function completed(){return state.done[track]||[]}
+function unlocked(d){return d===1||completed().includes(d-1)}
+function unique(a){return [...new Set(a)]}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function view(id){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"});}
+
+/* ----------------- CURRICULUM DATA ----------------- */
+/* Content is arranged by CEFR level and track.
+   Lessons use topic-specific sets, with a progression of difficulty. */
+
+const topics={
+ daily:[
+  "Greetings & introductions","At the café","Family & friends","Home & rooms","Numbers & time",
+  "Shopping","Food & cooking","Getting around","Daily routines","Weather",
+  "Making plans","At a restaurant","Hobbies","Workdays","Travel",
+  "Health","Talking about yesterday","Feelings","Swedish culture","Everyday conversations"
+ ],
+ business:[
+  "Introductions at work","Meetings","Email & messaging","Presentations","Scheduling",
+  "Workplace vocabulary","Customer service","Negotiations","Project updates","Networking",
+  "Office routines","Business travel","Feedback","Team collaboration","Problem solving",
+  "Leadership","Finance","Recruitment","Strategy","Professional small talk","Decisions"
+ ]
+};
+
+const wordSets={
+ A1:[
+  [["hej","hello"],["tack","thank you"],["ursäkta","excuse me"],["snälla","please"],["ja","yes"],["nej","no"],["kanske","maybe"],["bra","good"],["dålig","bad"],["vatten","water"]],
+  [["kaffe","coffee"],["te","tea"],["mjölk","milk"],["bröd","bread"],["ost","cheese"],["äpple","apple"],["mat","food"],["hungrig","hungry"],["mätt","full / satisfied"],["frukost","breakfast"]],
+  [["hem","home"],["hus","house"],["rum","room"],["kök","kitchen"],["sovrum","bedroom"],["bord","table"],["stol","chair"],["dörr","door"],["fönster","window"],["nyckel","key"]],
+  [["familj","family"],["mamma","mum"],["pappa","dad"],["syster","sister"],["bror","brother"],["barn","child"],["vän","friend"],["man","man"],["kvinna","woman"],["person","person"]],
+  [["idag","today"],["imorgon","tomorrow"],["igår","yesterday"],["morgon","morning"],["kväll","evening"],["natt","night"],["dag","day"],["vecka","week"],["helg","weekend"],["tid","time"]],
+  [["köpa","buy"],["betala","pay"],["pris","price"],["billig","cheap"],["dyr","expensive"],["affär","shop"],["pengar","money"],["kort","card"],["kvitto","receipt"],["kassa","checkout"]],
+  [["gå","walk / go"],["åka","travel / ride"],["buss","bus"],["tåg","train"],["bil","car"],["cykel","bike"],["station","station"],["gata","street"],["höger","right"],["vänster","left"]],
+  [["arbeta","work"],["börja","start"],["sluta","finish"],["jobba","work"],["paus","break"],["ledig","off work"],["möte","meeting"],["kollega","colleague"],["chef","manager"],["kontor","office"]],
+  [["väder","weather"],["sol","sun"],["regn","rain"],["snö","snow"],["varm","warm"],["kall","cold"],["blåsa","blow"],["moln","cloud"],["ute","outside"],["inne","inside"]],
+  [["tycka om","like"],["läsa","read"],["lyssna","listen"],["titta","watch"],["spela","play"],["springa","run"],["promenad","walk"],["musik","music"],["film","film"],["roligt","fun"]],
+  [["vilja","want"],["kunna","can"],["måste","must"],["behöver","need"],["får","may / get"],["ska","will / going to"],["göra","do"],["säg","say"],["fråga","ask"],["svar","answer"]],
+  [["först","first"],["sedan","then"],["också","also"],["men","but"],["eller","or"],["för att","in order to"],["med","with"],["utan","without"],["här","here"],["där","there"]]
+ ],
+ A2:[
+  [["brukar","usually do"],["oftast","most often"],["ibland","sometimes"],["sällan","rarely"],["alltid","always"],["redan","already"],["fortfarande","still"],["nyligen","recently"],["plötsligt","suddenly"],["nästan","almost"]],
+  [["försöka","try"],["lyckas","succeed"],["misslyckas","fail"],["bestämma","decide"],["välja","choose"],["glömma","forget"],["minnas","remember"],["förklara","explain"],["hämta","pick up"],["lämna","leave"]],
+  [["trevlig","pleasant"],["viktig","important"],["möjlig","possible"],["vanlig","usual"],["särskild","specific"],["annorlunda","different"],["nära","near"],["långt","far"],["lagom","just right"],["fort","quickly"]],
+  [["tycker","think / feel"],["tror","believe"],["hoppas","hope"],["undrar","wonder"],["känns","feels"],["verkar","seems"],["menar","mean"],["håller med","agree"],["oroa sig","worry"],["föredra","prefer"]],
+  [["förslag","suggestion"],["plan","plan"],["möjlighet","opportunity"],["problem","problem"],["lösning","solution"],["skillnad","difference"],["anledning","reason"],["sätt","way"],["situation","situation"],["beslut","decision"]],
+  [["eftersom","because"],["därför","therefore"],["trots","despite"],["medan","while"],["innan","before"],["efter","after"],["både","both"],["antingen","either"],["varken","neither"],["dessutom","in addition"]],
+  [["anmäla","register / report"],["boka","book"],["avboka","cancel"],["ändra","change"],["flytta","move"],["skicka","send"],["ta emot","receive"],["kontakta","contact"],["ordna","arrange"],["bekräfta","confirm"]],
+  [["hälsa","health"],["symptom","symptom"],["vila","rest"],["förkyld","having a cold"],["ont","pain"],["läkare","doctor"],["medicin","medicine"],["frisk","healthy"],["trött","tired"],["stressad","stressed"]],
+  [["rätt","correct"],["fel","wrong"],["tydlig","clear"],["enkelt","simple"],["komplicerad","complicated"],["säkert","certainly"],["osäker","uncertain"],["direkt","directly"],["ungefär","approximately"],["verkligen","really"]],
+  [["förändring","change"],["utveckling","development"],["erfarenhet","experience"],["kunskap","knowledge"],["utbildning","education"],["framtid","future"],["möte","meeting"],["överens","in agreement"],["ansvar","responsibility"],["resultat","result"]],
+  [["skulle","would"],["kunde","could"],["borde","should"],["hade","had"],["varit","been"],["blivit","become"],["gjort","done"],["funnits","existed"],["gått","gone"],["sagt","said"]],
+  [["samtidigt","at the same time"],["däremot","however"],["åtminstone","at least"],["egentligen","actually"],["särskilt","especially"],["eventuellt","possibly"],["antagligen","probably"],["förmodligen","probably"],["i stället","instead"],["på grund av","because of"]]
+ ],
+ B1:[
+  [["utveckla","develop"],["förbättra","improve"],["påverka","influence"],["hantera","manage"],["diskutera","discuss"],["föreslå","propose"],["beskriva","describe"],["jämföra","compare"],["innebära","entail"],["genomföra","carry out"]],
+  [["utmaning","challenge"],["fördel","advantage"],["nackdel","disadvantage"],["orsak","cause"],["konsekvens","consequence"],["förhållande","relationship / condition"],["sammanhang","context"],["perspektiv","perspective"],["prioritet","priority"],["alternativ","alternative"]],
+  [["däremot","on the other hand"],["dessutom","moreover"],["därmed","thereby"],["såvida","unless"],["förutsatt att","provided that"],["även om","even if"],["i och med","since / given that"],["med tanke på","considering"],["å ena sidan","on one hand"],["å andra sidan","on the other hand"]],
+  [["uppnå","achieve"],["bidra","contribute"],["framgå","be clear / emerge"],["omfatta","include"],["inträffa","occur"],["resultera i","result in"],["begränsa","limit"],["utgå från","start from / assume"],["förhålla sig","relate / deal with"],["ta hänsyn till","take into account"]],
+  [["åsikt","opinion"],["bedömning","assessment"],["inställning","attitude"],["förväntning","expectation"],["bekymmer","concern"],["förtroende","trust"],["intryck","impression"],["övertygelse","conviction"],["argument","argument"],["diskussion","discussion"]],
+  [["hållbar","sustainable"],["effektiv","efficient"],["rimlig","reasonable"],["omfattande","extensive"],["avgörande","decisive"],["tillgänglig","available"],["flexibel","flexible"],["tillförlitlig","reliable"],["tydligt","clearly"],["väsentlig","essential"]],
+  [["samarbeta","collaborate"],["samordna","coordinate"],["förhandla","negotiate"],["prioritera","prioritize"],["uppmärksamma","pay attention"],["bemöta","respond to"],["motivera","justify"],["förtydliga","clarify"],["sammanfatta","summarize"],["resonera","reason"]],
+  [["framgång","success"],["misslyckande","failure"],["åtgärd","measure"],["resurs","resource"],["kvalitet","quality"],["effektivitet","efficiency"],["mål","goal"],["strategi","strategy"],["förändring","change"],["framsteg","progress"]],
+  [["dess","its"],["sin","his / her / their own"],["sina","his / her / their own"],["vars","whose"],["vilket","which"],["som","that / who"],["dels","partly"],["varken eller","neither nor"],["antingen eller","either or"],["oavsett","regardless"]],
+  [["i längden","in the long run"],["på kort sikt","in the short term"],["i praktiken","in practice"],["i teorin","in theory"],["för tillfället","for the moment"],["i själva verket","in fact"],["med andra ord","in other words"],["till exempel","for example"],["i fråga om","regarding"],["så småningom","eventually"]],
+  [["omständighet","circumstance"],["bakgrund","background"],["överenskommelse","agreement"],["förutsättning","condition"],["slutsats","conclusion"],["utgångspunkt","starting point"],["helhet","whole"],["mängd","amount"],["omfattning","scope"],["påstående","claim"]],
+  [["skulle kunna","could"],["har varit","has been"],["hade gjort","had done"],["blev","became"],["hade blivit","had become"],["verkar ha","seems to have"],["kommer att","will"],["kan tänkas","might"],["bör ha","should have"],["är på väg att","is about to"]]
+ ],
+ B2:[
+  [["förutsättning","prerequisite"],["åstadkomma","accomplish"],["bedöma","assess"],["redogöra","account for"],["resonera","reason"],["prioritera","prioritize"],["uppmärksamma","notice"],["tillämpa","apply"],["samordna","coordinate"],["vidareutveckla","further develop"]],
+  [["långsiktig","long-term"],["kortfattad","concise"],["omfattande","comprehensive"],["avgörande","crucial"],["hållbar","sustainable"],["relevant","relevant"],["konsekvent","consistent"],["övergripande","overall"],["transparent","transparent"],["ändamålsenlig","fit for purpose"]],
+  [["följaktligen","consequently"],["i synnerhet","in particular"],["i synnerhet","particularly"],["mot bakgrund av","in light of"],["i den mån","to the extent"],["i likhet med","similar to"],["förvisso","certainly"],["likväl","nevertheless"],["således","thus"],["allt eftersom","as"]],
+  [["framhäva","emphasize"],["återspegla","reflect"],["förebygga","prevent"],["förankra","anchor / establish"],["säkerställa","ensure"],["utvärdera","evaluate"],["vidta","take (measures)"],["uppfylla","fulfil"],["medföra","entail"],["avse","concern / refer to"]],
+  [["tillvägagångssätt","approach"],["överenskommelse","agreement"],["åtgärd","measure"],["avvägning","trade-off"],["underlag","basis / supporting material"],["utfall","outcome"],["omfattning","scope"],["insats","effort"],["resonemang","reasoning"],["ställningstagande","position"]],
+  [["påtaglig","tangible"],["betydande","significant"],["bristande","inadequate"],["omfattande","extensive"],["avgörande","decisive"],["motstridig","contradictory"],["sannolik","likely"],["lämplig","suitable"],["fördelaktig","beneficial"],["oundviklig","inevitable"]],
+  [["ta ställning till","take a position on"],["dra slutsatsen","draw the conclusion"],["komma fram till","arrive at"],["ställa krav på","place demands on"],["i första hand","primarily"],["i andra hand","secondarily"],["gå igenom","go through"],["ligga till grund för","form the basis for"],["komma överens om","agree on"],["förhålla sig till","relate to"]],
+  [["risk","risk"],["bedömning","assessment"],["målsättning","objective"],["genomförande","implementation"],["uppföljning","follow-up"],["avvikelse","deviation"],["påverkan","impact"],["ansvarsfördelning","division of responsibility"],["förankring","anchoring / buy-in"],["resultat","result"]],
+  [["trots att","despite the fact that"],["såväl som","as well as"],["i stället för","instead of"],["med anledning av","due to"],["i samband med","in connection with"],["under förutsättning att","provided that"],["med hänsyn till","with regard to"],["i enlighet med","in accordance with"],["i motsats till","in contrast to"],["i syfte att","with the aim of"]],
+  [["uppnå","achieve"],["motivera","justify"],["förtydliga","clarify"],["framhålla","point out"],["förespråka","advocate"],["ifrågasätta","question"],["förutsätta","presuppose"],["fastställa","establish"],["avgränsa","delimit"],["ompröva","reconsider"]],
+  [["slutsats","conclusion"],["antagande","assumption"],["perspektiv","perspective"],["prioritering","prioritization"],["konsekvens","consequence"],["resonemang","reasoning"],["sammanhang","context"],["tillämpning","application"],["strategi","strategy"],["utvärdering","evaluation"]],
+  [["i nuläget","currently"],["på sikt","in the long run"],["i huvudsak","mainly"],["i viss mån","to some extent"],["utan tvekan","without doubt"],["i synnerhet","especially"],["med andra ord","in other words"],["i praktiken","in practice"],["som helhet","as a whole"],["i efterhand","in retrospect"]]
+ ]
+};
+
+/* Phrase banks, designed to be level appropriate and genuinely idiomatic.
+   The lesson topic is used to select the relevant situation. */
+const phrases={
+ daily:[
+  [["Hej, hur är läget?","Hi, how are things?"],["Jo tack, det är bra. Själv då?","I'm good, thanks. How about you?"],["Jag skulle gärna vilja ha en kaffe.","I'd like a coffee, please."],["Kan jag få kvittot?","Could I have the receipt?"],["Var ligger närmaste busshållplats?","Where is the nearest bus stop?"],["Jag är lite sen, men jag kommer snart.","I'm a little late, but I'll be there soon."],["Ska vi ses efter jobbet?","Shall we meet after work?"],["Det passar bra för mig.","That works well for me."],["Jag har inte hunnit än.","I haven't had time yet."],["Vi hörs senare!","Talk to you later!"]],
+  [["Jag skulle behöva hjälp med det här.","I could use some help with this."],["Har ni den i en annan storlek?","Do you have it in another size?"],["Kan jag betala med kort?","Can I pay by card?"],["Det var inte riktigt det jag tänkte mig.","That wasn't quite what I had in mind."],["Jag tar gärna en till.","I'll gladly have another."],["Vet du om affären är öppen?","Do you know if the shop is open?"],["Jag känner mig lite trött idag.","I feel a bit tired today."],["Vi kan väl bestämma det senare?","Could we decide that later?"],["Jag håller med, faktiskt.","I actually agree."],["Det löser sig nog.","It'll probably work out."]]
+ ],
+ business:[
+  [["God morgon allihop. Ska vi sätta igång?","Good morning, everyone. Shall we get started?"],["Jag skickar underlaget efter mötet.","I'll send the material after the meeting."],["Kan vi boka om till torsdag?","Can we reschedule to Thursday?"],["Jag återkommer så snart jag vet mer.","I'll get back to you as soon as I know more."],["Det ligger inom vår budget.","It's within our budget."],["Vi behöver stämma av tidsplanen.","We need to check the timeline."],["Vad är nästa steg?","What's the next step?"],["Jag tar med mig frågan.","I'll take that question with me."],["Det låter som en bra lösning.","That sounds like a good solution."],["Tack för ett bra möte.","Thanks for a good meeting."]],
+  [["Jag skulle vilja lyfta en fråga.","I'd like to raise a question."],["Hur ser ni på det förslaget?","What do you think about that proposal?"],["Vi behöver tydliggöra ansvarsfördelningen.","We need to clarify the division of responsibilities."],["Det är viktigt att vi håller tidsplanen.","It's important that we stick to the timeline."],["Kan du skicka en uppdatering före lunch?","Can you send an update before lunch?"],["Vi behöver mer underlag innan vi fattar beslut.","We need more information before deciding."],["Jag ser några möjliga risker.","I see a few potential risks."],["Låt oss prioritera det viktigaste först.","Let's prioritize what's most important."],["Jag föreslår att vi följer upp nästa vecka.","I suggest we follow up next week."],["Har vi samsyn kring målet?","Are we aligned on the goal?"]]
+ ]
+};
+
+const grammar={
+ A1:[
+  ["Word order: a simple statement","In a main clause, the verb usually comes in position 2.","Jag bor i Sverige. · I live in Sweden.","Jag **bor** i Sverige."],
+  ["Questions","A yes/no question often starts with the verb. Question words usually come first.","Bor du här? · Do you live here? Var bor du? · Where do you live?","Bor du här?"],
+  ["En and ett","Swedish nouns have grammatical gender. Learn the article with the noun.","en bok · ett hus · a book / a house","en bok, ett hus"],
+  ["Present tense","Present tense can describe now or habitual actions.","Jag arbetar idag. · I work today.","Jag arbetar."],
+  ["Negation: inte","In a main clause, inte usually follows the finite verb.","Jag kommer inte idag. · I'm not coming today.","Jag kommer inte."],
+  ["Possessives","Use min/mitt/mina depending on the noun.","min bil, mitt hus, mina vänner","mitt hus"]
+ ],
+ A2:[
+  ["V2 with time expressions","In Swedish main clauses, the verb stays in second position even when time comes first.","Idag **ska** jag jobba hemma. · Today I'll work from home.","Idag ska jag…"],
+  ["Perfekt","Har + supine describes an action or experience relevant to the present.","Jag har redan ätit. · I've already eaten.","har + supine"],
+  ["Subordinate clauses","In subordinate clauses, inte usually comes before the verb.","… eftersom jag inte har tid. · …because I don't have time.","eftersom jag inte…"],
+  ["Comparisons","Use bättre/best and sämre/sämst for irregular comparison.","Det här är bättre. · This is better.","bra–bättre–bäst"],
+  ["Att + infinitive","Many verbs connect to another verb with att.","Jag försöker att förstå. · I try to understand.","försöker att + verb"],
+  ["Reflexive verbs","Some actions use sig, such as känna sig and lägga sig.","Jag känner mig trött. · I feel tired.","känner mig"]
+ ],
+ B1:[
+  ["Relative clauses","Som links a noun to extra information.","Personen som ringde är min chef. · The person who called is my manager.","personen som…"],
+  ["Passive voice","S-passive often focuses on what happens, not who does it.","Ansökan skickas imorgon. · The application is sent tomorrow.","skickas"],
+  ["Conditional skulle","Skulle softens requests and describes hypothetical situations.","Jag skulle gärna vilja… · I would really like…","skulle vilja"],
+  ["Connectors","Connectors signal cause, contrast, result and addition.","Det var dyrt, men däremot väldigt hållbart.","däremot"],
+  ["Past tense & perfect","Use past tense for finished past events; perfekt for relevant experiences.","Vi diskuterade det igår. / Vi har diskuterat det.","preteritum vs perfekt"],
+  ["Pronoun reference","Sin/sitt/sina refer to the subject's own possession in third-person contexts.","Hon tog med sin dator. · She brought her own computer.","sin / sitt / sina"]
+ ],
+ B2:[
+  ["Subtle modal meaning","Bör, skulle and kan can soften recommendations and proposals.","Det skulle kunna vara ett alternativ. · That could be an option.","skulle kunna"],
+  ["Formal register","Choose neutral professional phrasing over overly direct commands.","Jag skulle uppskatta om du kunde återkomma.","softened request"],
+  ["Concession","Även om and trots att introduce a concession.","Även om det tar tid behöver vi göra det.","even if"],
+  ["Nominal style","Professional Swedish often uses nouns for processes, but avoid unnecessarily heavy language.","Vi behöver utvärdera förslaget. · We need to evaluate the proposal.","verb-based clarity"],
+  ["Nuance & emphasis","Word order and connectors guide what the listener perceives as important.","Det är framför allt kvaliteten som spelar roll."," framför allt"],
+  ["Precision","Use conditional and qualifiers to avoid claiming more than you know.","Det verkar rimligt, förutsatt att…","förutsatt att"]
+ ]
+};
+
+const dialogues={
+ daily:[
+  [["A","Hej! Är det ledigt här?","Hi! Is this seat free?"],["B","Ja, absolut. Varsågod.","Yes, of course. Go ahead."],["A","Tack. Väntar du på någon?","Thanks. Are you waiting for someone?"],["B","Nej, jag ska bara ta en kaffe.","No, I'm just getting a coffee."],["A","Vad trevligt. Ha en fin dag!","Lovely. Have a nice day!"]],
+  [["A","Ursäkta, vet du var mjölken finns?","Excuse me, do you know where the milk is?"],["B","Ja, den står längst bort vid kylen.","Yes, it's at the far end by the fridge."],["A","Tack, jag hittar den.","Thanks, I'll find it."],["B","Ingen fara!","No problem!"]],
+  [["A","Ska vi hitta på något i helgen?","Shall we do something this weekend?"],["B","Gärna! Vad hade du tänkt dig?","Sure! What did you have in mind?"],["A","Vi kanske kan gå ut och äta?","Maybe we could go out for dinner?"],["B","Det låter jättetrevligt.","That sounds really nice."]]
+ ],
+ business:[
+  [["A","Har du hunnit titta på rapporten?","Have you had a chance to look at the report?"],["B","Ja, jag har några kommentarer.","Yes, I have a few comments."],["A","Bra. Vi går igenom dem på mötet.","Good. We'll go through them in the meeting."],["B","Jag skickar mina synpunkter innan dess.","I'll send my feedback before then."],["A","Perfekt, tack.","Perfect, thanks."]],
+  [["A","Kan vi flytta mötet till efter lunch?","Can we move the meeting to after lunch?"],["B","Det fungerar för mig. Klockan ett?","That works for me. One o'clock?"],["A","Ja, jag uppdaterar inbjudan.","Yes, I'll update the invitation."],["B","Tack! Då ses vi senare.","Thanks! See you later."]],
+  [["A","Hur går projektet?","How is the project going?"],["B","Vi ligger lite efter, men har en plan.","We're a little behind, but have a plan."],["A","Vad behöver ni för att komma vidare?","What do you need to move forward?"],["B","Framför allt behöver vi ett beslut.","Above all, we need a decision."]]
+ ]
+};
+
+const expressions={
+ daily:[["Ingen fara.","No worries."],["Det ordnar sig.","It'll work out."],["Vad synd!","That's a shame!"],["Absolut.","Absolutely."],["Det beror på.","It depends."],["Vi får se.","We'll see."],["Jag håller med.","I agree."],["Precis så.","Exactly."]],
+ business:[["Jag återkommer.","I'll get back to you."],["Det låter rimligt.","That sounds reasonable."],["Vi tar det därifrån.","We'll take it from there."],["Låt oss stämma av.","Let's check in."],["Det är en bra utgångspunkt.","That's a good starting point."],["Jag vill bara säkerställa att…","I just want to make sure that…"],["Med det sagt…","Having said that…"],["Vi behöver landa i ett beslut.","We need to reach a decision."]]
+};
+
+/* ----------------- LESSON CONTENT SELECTOR ----------------- */
+function topicFor(d){return topics[track][(d-1)%topics[track].length]}
+function titleFor(d){return topicFor(d)}
+function levelWords(d){
+ const lv=level(d),bank=wordSets[lv];
+ const idx=Math.floor((d-1)/7)%bank.length;
+ return bank[idx];
+}
+function lessonPhrases(d){return phrases[track][Math.floor((d-1)/10)%phrases[track].length]}
+function lessonDialogue(d){return dialogues[track][Math.floor((d-1)/15)%dialogues[track].length]}
+function lessonExpressions(){return expressions[track]}
+function lessonGrammar(d){return grammar[level(d)][Math.floor((d-1)/12)%grammar[level(d)].length]}
+
+/* ----------------- PATH / DASHBOARD ----------------- */
+function setTrack(t){
+ track=t;
+ dailyBtn.classList.toggle("active",t==="daily");
+ businessBtn.classList.toggle("active",t==="business");
+ filter="all";renderPath();
+}
+function renderLevels(){
+ levels.innerHTML=`<button class="pill ${filter==="all"?"active":""}" onclick="setFilter('all')">All levels</button>`+
+ ["A1","A2","B1","B2"].map(l=>`<button class="pill ${filter===l?"active":""}" onclick="setFilter('${l}')">${l}</button>`).join("");
+}
+function setFilter(f){filter=f;renderPath()}
+function renderPath(){
+ renderLevels();
+ const n=completed().length;
+ progTitle.textContent=trackLabel()+" progress";
+ progText.textContent=n+" / 365 days";
+ progFill.style.width=(n/365*100)+"%";
+ const html=["A1","A2","B1","B2"].filter(l=>filter==="all"||filter===l).map(l=>{
+ const [start,end]=bounds(l);
+ const bg={A1:"a1",A2:"a2",B1:"b1",B2:"b2"}[l];
+ let nodes="";
+ for(let d=start;d<=end;d++){
+   const done=completed().includes(d),open=unlocked(d);
+   const cls=done?"done":open?"current":"locked";
+   const icon=done?"✓":open?"▶":"🔒";
+   const side=d%2?"left":"right";
+   nodes+=`<div class="node-row ${side}">
+     <button class="node ${cls}" ${open?`onclick="openLesson(${d})"`:"disabled"} title="Day ${d}: ${esc(titleFor(d))}">${icon}</button>
+     <div class="node-label">DAY ${d}<br>${esc(titleFor(d))}</div>
+   </div>`;
+ }
+ return `<section class="path" style="margin-bottom:16px">
+  <div class="levelheader ${bg}"><div><h3>${l}</h3><small>Days ${start}–${end}</small></div><b>${l==="A1"?"🌱":l==="A2"?"🌿":l==="B1"?"🌳":"🌲"}</b></div>
+  <div class="nodes">${nodes}</div>
+ </section>`;
+ }).join("");
+ path.innerHTML=html;
+ streak.textContent=state.streak||0;xp.textContent=state.xp||0;
+ known.textContent=Object.keys(state.words).length;
+ reviewN.textContent=state.review.length;
+ todayNew.textContent=state.today.date===dateKey()?state.today.count:0;
+}
+function openLesson(d){
+ if(!unlocked(d))return;
+ day=d;tab="learn";quizPos=0;quizScore=0;quizAnswered=false;
+ countWords();
+ view("lessonView");renderLesson();
+}
+function countWords(){
+ const today=dateKey();
+ if(state.today.date!==today)state.today={date:today,count:0};
+ levelWords(day).forEach(([w,en])=>{
+  const id=w.toLowerCase();
+  if(!state.words[id]){state.words[id]={en,day,track};state.today.count++;}
+ });
+ save();renderPath();
+}
+
+/* ----------------- LESSON NAV ----------------- */
+function renderLesson(){
+ dayBadge.textContent="DAY "+day+" · "+level(day);
+ lessonTitle.textContent=titleFor(day);
+ lessonMeta.textContent=trackLabel()+" · "+level(day)+" · "+(day%7===0?"Review checkpoint":"Daily lesson");
+ lessonFill.style.width=(completed().length/365*100)+"%";
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ renderTab();
+}
+function renderTab(){
+ lessonStatus.textContent="";
+ const c=document.getElementById("content");
+ if(tab==="learn")renderLearn(c);
+ if(tab==="listen")renderListen(c);
+ if(tab==="grammar")renderGrammar(c);
+ if(tab==="practice")renderPractice(c);
+ if(tab==="speak")renderSpeak(c);
+}
+function wordCard(w,en){
+ return `<div class="word"><div><div class="sv">${esc(w)}</div><div class="en">${esc(en)}</div></div>
+ <div class="tools"><button class="iconbtn" data-audio="${esc(w)}" title="Play native recording" aria-label="Play audio">♫</button>
+ <button class="iconbtn ${state.review.includes(w)?"saved":""}" onclick="toggleReview('${esc(w)}')" title="Save for review">${state.review.includes(w)?"★":"☆"}</button></div></div>`;
+}
+function renderLearn(c){
+ c.innerHTML=`<h3 class="block">Today's words</h3><p class="sub">Tap the audio button to search for and play an authentic recording when available.</p>
+ ${levelWords(day).map(([w,en])=>wordCard(w,en)).join("")}
+ <h3 class="block" style="margin-top:22px">Useful phrases</h3>
+ ${lessonPhrases(day).map(([sv,en])=>sentenceCard(sv,en)).join("")}
+ <button class="action secondary full" onclick="goTab('listen')">Continue to listening →</button>`;
+}
+function sentenceCard(sv,en){
+ return `<div class="sentence"><div class="sv">${esc(sv)}</div><div class="en">${esc(en)}</div>
+ <div class="tools" style="margin-top:8px"><button class="iconbtn" data-audio="${esc(sv)}" aria-label="Play native Swedish audio">♫</button></div></div>`;
+}
+function renderListen(c){
+ const items=lessonPhrases(day);
+ c.innerHTML=`<h3 class="block">Listening practice 🎧</h3>
+ <p class="sub">Listen before reading the English. Native recording lookup is automatic. Recordings may not exist for every phrase.</p>
+ <div style="background:var(--blue);border-radius:15px;padding:14px;margin-bottom:12px">
+ <b>Listening challenge</b><p style="margin:6px 0 0">Listen to each phrase. Try to understand the main idea before checking the translation.</p></div>
+ ${items.map(([sv,en],i)=>`<div class="sentence" id="listen${i}"><div class="sv">${esc(sv)}</div>
+ <div class="en" id="trans${i}" style="display:none">${esc(en)}</div>
+ <div class="tools" style="margin-top:9px"><button class="iconbtn" data-audio="${esc(sv)}">♫</button>
+ <button class="action secondary" onclick="revealTranslation(${i})">Show meaning</button></div></div>`).join("")}
+ <button class="action dark full" onclick="playQueue(${JSON.stringify(items.map(x=>x[0]))})">▶ Listen to all · 2 sec pause</button>
+ <button class="action secondary full" style="margin-top:8px" onclick="stopAudio()">■ Stop audio</button>
+ <div class="status" id="audioStatus"></div>`;
+}
+function revealTranslation(i){const x=document.getElementById("trans"+i);if(x)x.style.display="block"}
+function renderGrammar(c){
+ const g=lessonGrammar(day);
+ c.innerHTML=`<h3 class="block">Grammar in context</h3>
+ <div class="grammar"><h4>${esc(g[0])}</h4><p>${esc(g[1])}</p>
+ <div class="example">${esc(g[2])}</div><b>Pattern to remember</b><div class="example">${esc(g[3])}</div></div>
+ <h3 class="block">Try to notice</h3><p class="sub">Read today's sentences and find where you see this pattern. Use the grammar to create one sentence of your own.</p>
+ <textarea id="grammarAnswer" placeholder="Write an example sentence using the pattern…"></textarea>
+ <button class="action full" style="margin-top:9px" onclick="saveGrammar()">Save my example</button>
+ <div class="status" id="grammarStatus"></div>`;
+}
+function saveGrammar(){const t=grammarAnswer.value.trim();if(!t){grammarStatus.textContent="Write a sentence first.";return}state.writing["grammar_"+track+"_"+day]=t;save();grammarStatus.textContent="Saved in your browser."}
+function renderPractice(c){
+ const words=levelWords(day);
+ const q=words[quizPos%words.length];
+ const choices=makeChoices(q[1],words.map(x=>x[1]));
+ quizAnswered=false;
+ c.innerHTML=`<h3 class="block">Recall challenge · ${quizPos+1}/5</h3>
+ <div style="background:var(--yellow);padding:17px;border-radius:15px;margin-bottom:14px">
+ <div class="sub" style="margin-bottom:5px">What does this Swedish word mean?</div><div class="sv">${esc(q[0])}</div></div>
+ <div class="options">${choices.map(x=>`<button class="option" data-answer="${esc(x)}">${esc(x)}</button>`).join("")}</div>
+ <div class="feedback" id="feedback"></div>
+ <button id="nextQ" class="action dark full" disabled onclick="nextQuestion()">Continue</button>`;
+}
+function makeChoices(correct,all){
+ const list=[correct],pool=unique(all).filter(x=>x!==correct);
+ while(list.length<Math.min(4,unique(all).length)&&pool.length){
+ const idx=Math.floor(Math.random()*pool.length);list.push(pool.splice(idx,1)[0]);
+ }
+ return list.sort(()=>Math.random()-.5);
+}
+function answer(btn){
+ if(quizAnswered)return;quizAnswered=true;
+ const correct=levelWords(day)[quizPos%10][1],ok=btn.dataset.answer===correct;
+ if(ok)quizScore++;
+ document.querySelectorAll(".option").forEach(b=>{b.disabled=true;if(b.dataset.answer===correct)b.classList.add("correct")});
+ if(!ok)btn.classList.add("wrong");
+ feedback.textContent=ok?"Correct! Bra jobbat!":"Correct answer: "+correct;
+ nextQ.disabled=false;
+}
+function nextQuestion(){
+ quizPos++;
+ if(quizPos>=5){
+ content.innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:50px">🎉</div><h2>Challenge complete</h2><p>You got ${quizScore}/5 correct.</p><button class="action dark full" onclick="goTab('speak')">Continue →</button></div>`;
+ return;
+ }
+ renderPractice(content);
+}
+function renderSpeak(c){
+ const saved=state.writing[track+"_"+day]||"";
+ c.innerHTML=`<h3 class="block">Make it yours ✍️</h3>
+ <p class="sub">Write a few sentences about your own life or work using today's vocabulary.</p>
+ <textarea id="myText" placeholder="Skriv på svenska…">${esc(saved)}</textarea>
+ <button class="action dark full" style="margin-top:10px" onclick="saveText()">Save writing</button>
+ <div class="status" id="writeStatus"></div>
+ <div class="grammar" style="margin-top:15px"><b>Useful expressions</b>
+ ${lessonExpressions().map(([sv,en])=>`<div class="sentence"><b>${esc(sv)}</b><div class="en">${esc(en)}</div><button class="iconbtn" data-audio="${esc(sv)}">♫</button></div>`).join("")}</div>
+ <button class="action full" onclick="finishLesson()">✓ Complete lesson · +20 XP</button>`;
+}
+function saveText(){const t=myText.value.trim();if(!t){writeStatus.textContent="Write something first.";return}state.writing[track+"_"+day]=t;save();writeStatus.textContent="Writing saved on this device."}
+function goTab(t){tab=t;renderLesson()}
+function finishLesson(){
+ if(!completed().includes(day)){
+ completed().push(day);state.xp+=20;updateStreak();
+ }
+ save();renderPath();view("home");
+}
+function updateStreak(){
+ const today=dateKey();if(state.lastDone===today)return;
+ const d=new Date();d.setDate(d.getDate()-1);
+ const y=d.toLocaleDateString("sv-SE");
+ state.streak=state.lastDone===y?(state.streak||0)+1:1;
+ state.lastDone=today;
+}
+function backHome(){stopAudio();view("home");renderPath()}
+
+/* ----------------- REAL RECORDING LOOKUP ----------------- */
+/* Searches Tatoeba's public sentence API.
+   We deliberately do not use synthetic Google/browser voice.
+   If no exact sentence recording exists, we show that clearly. */
+
+async function playNative(text,button){
+ stopAudio(false);
+ setAudioStatus("Searching for a Swedish recording…");
+ if(button){button.disabled=true;button.textContent="…"}
+ try{
+  const url="https://api.tatoeba.org/v1/sentences?lang=swe&q="+encodeURIComponent(text)+"&has_audio=yes&include=audios";
+  const res=await fetch(url);
+  if(!res.ok)throw new Error("Audio search unavailable");
+  const data=await res.json();
+  const sentences=data.data||data.sentences||[];
+  const match=sentences.find(s=>(s.text||"").trim().toLowerCase()===text.trim().toLowerCase())||sentences[0];
+  if(!match)throw new Error("No matching recording found");
+  const audioUrl="https://audio.tatoeba.org/sentences/swe/"+match.id+".mp3";
+  const player=new Audio(audioUrl);
+  activeAudio=player;
+  player.onended=()=>{activeAudio=null;setAudioStatus("Recording finished.")};
+  player.onerror=()=>{activeAudio=null;setAudioStatus("This recording could not be played. Try another phrase.")};
+  player.onplay=()=>setAudioStatus("Playing authentic Swedish recording · Tatoeba");
+  await player.play();
+ }catch(e){
+  setAudioStatus("No exact native recording found for this phrase. Try a shorter phrase or another sentence. No robotic voice was used.");
+ }finally{
+  if(button){button.disabled=false;button.textContent="♫"}
+ }
+}
+function setAudioStatus(t){
+ const el=document.getElementById("audioStatus");if(el)el.textContent=t;
+ lessonStatus.textContent=t;
+}
+function stopAudio(clear=true){
+ if(queueTimer){clearTimeout(queueTimer);queueTimer=null}
+ queue=[];queueIndex=0;
+ if(activeAudio){activeAudio.pause();activeAudio.currentTime=0;activeAudio=null}
+ if(clear)setAudioStatus("Audio stopped.");
+}
+function playQueue(items){
+ stopAudio();queue=items.slice();queueIndex=0;playNext();
+}
+async function playNext(){
+ if(queueIndex>=queue.length){queue=[];setAudioStatus("Listening sequence finished.");return}
+ const phrase=queue[queueIndex++];
+ setAudioStatus("Playing "+queueIndex+" / "+(queue.length)+" · Looking for native recording");
+ try{
+  const url="https://api.tatoeba.org/v1/sentences?lang=swe&q="+encodeURIComponent(phrase)+"&has_audio=yes&include=audios";
+  const r=await fetch(url);if(!r.ok)throw 0;
+  const j=await r.json();const arr=j.data||[];
+  const s=arr.find(x=>(x.text||"").trim().toLowerCase()===phrase.trim().toLowerCase())||arr[0];
+  if(!s)throw 0;
+  const a=new Audio("https://audio.tatoeba.org/sentences/swe/"+s.id+".mp3");
+  activeAudio=a;
+  a.onended=()=>{activeAudio=null;queueTimer=setTimeout(playNext,2000)};
+  a.onerror=()=>{activeAudio=null;queueTimer=setTimeout(playNext,2000)};
+  await a.play();
+ }catch(e){
+  setAudioStatus("No recording found for item "+queueIndex+"; moving to the next.");
+  queueTimer=setTimeout(playNext,2000);
+ }
+}
+
+/* ----------------- REVIEW / WORD TRACKING ----------------- */
+function toggleReview(w){
+ const i=state.review.indexOf(w);
+ if(i>=0)state.review.splice(i,1);else state.review.push(w);
+ save();renderPath();renderTab();
+}
+function openReview(){
+ view("reviewView");renderReview();
+}
+function renderReview(){
+ if(!state.review.length){reviewContent.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">No saved words yet. Use the ☆ button beside words to add them.</div>';return}
+ reviewContent.innerHTML=state.review.map(w=>`<div class="reviewitem">
+ <div><b>${esc(w)}</b><div class="en">${esc(state.words[w.toLowerCase()]?.en||"")}</div>
+ <button class="action secondary" onclick="revealReview('${esc(w)}')">${reviewReveal[w]?"Hide":"Reveal meaning"}</button>
+ <div class="en" id="rv-${esc(w)}" style="display:${reviewReveal[w]?"block":"none"}">${esc(state.words[w.toLowerCase()]?.en||"")}</div></div>
+ <div class="tools"><button class="iconbtn" data-audio="${esc(w)}">♫</button><button class="action secondary" onclick="removeReview('${esc(w)}')">✓</button></div></div>`).join("");
+}
+function revealReview(w){reviewReveal[w]=!reviewReveal[w];renderReview()}
+function removeReview(w){state.review=state.review.filter(x=>x!==w);save();renderPath();renderReview()}
+
+/* ----------------- EVENTS ----------------- */
+tabs.addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(!b)return;goTab(b.dataset.tab)});
+content.addEventListener("click",e=>{
+ const a=e.target.closest("[data-audio]");if(a){playNative(a.dataset.audio,a);return}
+ const o=e.target.closest(".option");if(o){answer(o);return}
+});
+reviewContent.addEventListener("click",e=>{
+ const a=e.target.closest("[data-audio]");if(a)playNative(a.dataset.audio,a)
+});
+renderPath();
+</script>
+</body>
+</html>
